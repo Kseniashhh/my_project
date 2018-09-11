@@ -1,0 +1,39 @@
+<!doctype html>
+<html>
+<head>
+  <title>What do I want</title>
+<link rel = "stylesheet" href="/static/site.css">
+<script src="http://code.jquery.com/jquery.js"></script>
+
+</head>
+
+<body>
+  <a href= "/" class="logo">
+    <img src="/static/home_logo.png">
+  </a> 
+    {% if session.get('user') != None %}
+  <div>
+    <form action = '/logout'>
+        <input type='submit' value='LogOut'> 
+    </form>
+  </div>
+  {% endif %}
+  <hr>
+
+  <div class="container">
+
+  <!-- Show flashed messages -->
+  {% with messages = get_flashed_messages() %}
+      {% for message in messages %}
+          <div class="alert alert-warning" id="flashMessage">{{ message }}</div>
+      {% endfor %}
+  {% endwith %}
+
+</div>
+
+  {% block content %} put your content here {% endblock %}
+
+
+
+</body>
+</html>

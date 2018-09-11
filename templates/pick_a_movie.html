@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>Pick a movie</h1><br>
+
+
+<form action = "/search_random" id="random">
+    <input type="submit" value="Surprise me!"> <br>
+</form>
+<br>
+<h2> More advanced search </h2><br>
+<form action = '/search' id="search">
+    Select your genre: <select name="genres">
+        <option selected disabled>Choose genre</option>
+        <option value="drama">Drama</option>
+        <option value="comedy">Comedy</option>
+        <option value="action">Action</option>
+        <option value="thriller">Thriller</option>
+        <option value="documentary">Documentary</option><br><br>
+    Select your decade: <select name="decade">
+        <option selected disabled>Choose decade</option>
+        <option value="1980s">1980s</option>
+        <option value="1990s">1990s</option>
+        <option value="2000s">2000s</option>
+        <option value="2010s">2010s</option>
+    <br>
+
+    <type="submit" value="Give me the best options"> <br>
+    
+</form>
+
+{% endblock %}
