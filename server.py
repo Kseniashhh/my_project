@@ -14,6 +14,10 @@ from model import User, Movie, MovieList, connect_to_db, db
 
 import requests
 
+from imdb import IMDb
+
+import random
+
 import guidebox
 
 guidebox.api_key = os.environ['GUIDEBOX_TRIAL_KEY']
@@ -79,13 +83,11 @@ def if_username_exists():
 def user_signsUp():
     """ Register new user, ignore existing"""
 
-    username = request.args.get("username")
     email = request.args.get("email") 
     pswd = request.args.get("password")
     
 
     user_exists = if_user_exists(email)
-    username_exists = username_exists (username)
 
     if user_exists == None:
         if username_exists == None:
@@ -155,25 +157,59 @@ def add_user(username, email, password):
 
 @app.route("/movies")
 def display_movies():
-    """ Displaying selection of 3 movies"""
+    """ Store and then displaying selection of 3 movies"""
+
+
+    movie_list = get_random_movies()
+
+    for movie in movie_list:
+
+        title = movie['title']
+        released_at = movie['year']
+        # movie_gbID = movie['results'][0]['id']
+        poster = movie['cover url']
+
+
+        QUERY = """
+            INSERT INTO movies (title, released_at, poster)
+            VALUES (:title, :released_at, :poster)
+            """
+
+        db_cursor = db.session.execute(QUERY, {'title': title, 
+                                'released_at': released_at,  'poster':poster})
+
+
+        db.session.commit()
+
+
+    return render_template("your_movies.html", movies = movie_list)    
+
+
     
-    movies = guidebox.Movie.list(limit=3)
-    quota = guidebox.Quota.retrieve()
-
-    # oath = OAuth1("d8a7ed6d46dc8266f8f031b1718b97a075fc5da")
-    # url = "http://api-public.guidebox.com/v2/movies?limit=3"
-    # r = requests.get(url,auth = auth)
+    
 
 
+def get_random_movies():
+    """ Returns a list with 3 random movies"""
 
-    # r = requests.get("http://api-public.guidebox.com/v2/movies?limit=3",
-    #     auth = HTTPBasicAuth('','d8a7ed6d46dc8266f8f031b1718b97a075fc5da'))
+    i=0
+    movie_list = []
 
-    # print(r.status_code)
-    # print(r.content)
+    ia = IMDb()
 
 
-    return render_template("your_movies.html", movies = movies, quota=quota)    
+    while i < 3 :
+        random_id = random.choice(range(1,200000))
+        movie = ia.get_movie(random_id)
+        movie_list.append(movie)
+        i +=1
+
+    print(movie_list)
+    print("get_random done")
+    return movie_list
+
+
+
 
 
 

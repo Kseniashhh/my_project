@@ -38,8 +38,9 @@ class Movie(db.Model):
     __tablename__ = "movies"
 
     movie_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    # movie_gbID = db.Column(db.Integer, nullable=False)
     title = db.Column(db.String(200), nullable=False)
-    released_at = db.Column(db.DateTime, nullable=True)
+    released_at = db.Column(db.String(200), nullable=True)
     poster = db.Column(db.String(200), nullable=False)
 
     def __repr__(self):
