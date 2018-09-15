@@ -20,8 +20,8 @@ import random
 
 import guidebox
 
-guidebox.api_key = os.environ['GUIDEBOX_TRIAL_KEY']
-guidebox.region = "US"
+# guidebox.api_key = os.environ['GUIDEBOX_TRIAL_KEY']
+# guidebox.region = "US"
 
 app = Flask(__name__)
 
@@ -143,15 +143,7 @@ def add_user(username, email, password):
 
 ####################################################################
 
-# @app.route("/search_random")
-# def search_random():
-#     """ User will see 3 random movies"""
 
-#     movies = guidebox.Movie.list(limit=3)
-
-#     print(movies)
-
-#     return redirect("/movies", movies=movies)
 
 #####################################################################
 
@@ -161,6 +153,7 @@ def display_movies():
 
 
     movie_list = get_random_movies()
+    print('here')
 
     for movie in movie_list:
 
