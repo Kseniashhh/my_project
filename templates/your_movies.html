@@ -4,7 +4,14 @@
 <h1>Your movies</h1><br>
 
 
-{{movies}}
+{% for movie in movies %}
+    <p> {{ movie['title']}} </p>
+    Movie was released in {{ movie['year'] }} <br>
+    <br>
+    <img src="{{movie['cover url']}}">
+
+{% endfor %}
+
 
 <br>
 <br>

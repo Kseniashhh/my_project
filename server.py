@@ -65,7 +65,7 @@ def if_username_exists():
     """ Checks if username is taken """
 
     username = request.args.get("username")
-    print(username)
+    print(username + '1')
 
     QUERY = """
         SELECT username
@@ -75,7 +75,7 @@ def if_username_exists():
 
     db_cursor = db.session.execute(QUERY, {'username': username})
     row = db_cursor.fetchone()
-    print(row)
+    print(row + '2')
 
     return row
 
@@ -176,37 +176,48 @@ def display_movies():
     """ Store and then displaying selection of 3 movies"""
 
 
-    movie_list = get_random_movies()
-    print('here')
+    movie_list = get_random_movies(3)
+    show_movies = []
 
-    for movie in movie_list:
+    while len(show_movies) < 3:
 
-        title = movie['title']
-        released_at = movie['year']
-        # movie_gbID = movie['results'][0]['id']
-        poster = movie['cover url']
+        for movie in movie_list:
+
+            if 'cover url' in movie.keys():
 
 
-        QUERY = """
-            INSERT INTO movies (title, released_at, poster)
-            VALUES (:title, :released_at, :poster)
-            """
+                title = movie['title']
+                released_at = movie['year']
+                poster = movie['cover url']
 
-        db_cursor = db.session.execute(QUERY, {'title': title, 
+
+
+                QUERY = """
+                    INSERT INTO movies (title, released_at, poster)
+                    VALUES (:title, :released_at, :poster)
+                    """
+
+                db_cursor = db.session.execute(QUERY, {'title': title, 
                                 'released_at': released_at,  'poster':poster})
 
 
-        db.session.commit()
+                db.session.commit()
+                show_movies.append(movie)
 
 
-    return render_template("your_movies.html", movies = movie_list)    
+            else:
+                another_movie = get_random_movies(1)
+                movie_list.append(another_movie[0])
+
+
+    return render_template("your_movies.html", movies = show_movies)    
 
 
     
     
 
 
-def get_random_movies():
+def get_random_movies(num_random):
     """ Returns a list with 3 random movies"""
 
     i=0
@@ -215,7 +226,7 @@ def get_random_movies():
     ia = IMDb()
 
 
-    while i < 3 :
+    while i < num_random :
         random_id = random.choice(range(1,200000))
         movie = ia.get_movie(random_id)
         movie_list.append(movie)

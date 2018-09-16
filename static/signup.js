@@ -25,9 +25,9 @@ function checkUsername() {
 }
 
 
-function validateSubmit() {
+function validateSubmit(evt) {
     checkUsername();
-    ValidatePsw();
+    ValidatePsw(evt);
 }
 
 $('#signup').on('submit', validateSubmit);
