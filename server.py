@@ -20,6 +20,9 @@ import random
 
 import guidebox
 
+from datetime import datetime 
+
+
 # guidebox.api_key = os.environ['GUIDEBOX_TRIAL_KEY']
 # guidebox.region = "US"
 
@@ -62,6 +65,7 @@ def if_username_exists():
     """ Checks if username is taken """
 
     username = request.args.get("username")
+    print(username)
 
     QUERY = """
         SELECT username
@@ -85,19 +89,16 @@ def user_signsUp():
 
     email = request.args.get("email") 
     pswd = request.args.get("password")
+    username = request.args.get("username")
     
 
     user_exists = if_user_exists(email)
 
     if user_exists == None:
-        if username_exists == None:
-            add_user(username, email, pswd)
-            user_exists = if_user_exists(email)
-            session['user'] = user_exists[0]
-            # flash("User was successfully Signed Up")
-            return redirect("/")
-        else:
-            flash("This username is aleady taken. Please choose another one")
+        add_user(username,email, pswd)
+        user_exists = if_user_exists(email)
+        session['user'] = user_exists[0]
+        return redirect("/")
     else:  
         flash("This user is aleady registered. Please log in")
         return redirect("/login")
@@ -143,6 +144,29 @@ def add_user(username, email, password):
 
 ####################################################################
 
+
+@app.route("/login")
+def user_logIn():
+    """ Log in form"""
+
+    return redirect("/")
+
+
+####################################################################
+
+
+@app.route("/logout")
+def user_logOut():
+    """ log out current user """
+    
+    if 'user' not in session:
+        flash("User is not logged in")
+        return redirect("/")
+        
+    else:
+        session.pop('user')
+        flash("User is logged out")
+        return redirect("/")
 
 
 #####################################################################
