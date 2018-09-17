@@ -12,10 +12,11 @@ function ValidatePsw(evt){
 
 function checkError(results) {
     let username = results;
-    if (username != None){
+    console.log(username);
+    if (username != "None"){
         alert("This username exists");
     }
-    console.log("Finished checking username");
+    console.log("Finished checking username"); // after this form will be submitted
 }
 
 function checkUsername() {
@@ -26,8 +27,52 @@ function checkUsername() {
 
 
 function validateSubmit(evt) {
+    evt.preventDefault();
     checkUsername();
     ValidatePsw(evt);
 }
 
 $('#signup').on('submit', validateSubmit);
+
+
+
+$(document).ready(function(){
+
+    $("#password").focus();
+
+    $("#pwcheck").click(function(){
+        if ($("#pwcheck").is(":checked"))
+        {
+            $("#password").clone()
+            .attr("type", "text").insertAfter("#password")
+            .prev().remove();
+        }
+        else
+        {
+            $("#password").clone()
+            .attr("type","password").insertAfter("#password")
+            .prev().remove();
+        }
+    });
+});
+
+
+$(document).ready(function(){
+
+    $("#confirm").focus();
+
+    $("#confcheck").click(function(){
+        if ($("#confcheck").is(":checked"))
+        {
+            $("#confirm").clone()
+            .attr("type", "text").insertAfter("#confirm")
+            .prev().remove();
+        }
+        else
+        {
+            $("#confirm").clone()
+            .attr("type","password").insertAfter("#confirm")
+            .prev().remove();
+        }
+    });
+});

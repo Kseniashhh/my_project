@@ -18,6 +18,8 @@ from imdb import IMDb
 
 import random
 
+import json
+
 import guidebox
 
 from datetime import datetime 
@@ -75,9 +77,15 @@ def if_username_exists():
 
     db_cursor = db.session.execute(QUERY, {'username': username})
     row = db_cursor.fetchone()
-    print(row + '2')
 
-    return row
+    if row:
+        user_name = row[0]
+    else:
+        user_name = "None"
+
+    print(user_name, "row in usename check")
+
+    return user_name
 
 
 #####################################################################
@@ -117,7 +125,7 @@ def if_user_exists(email):
 
     db_cursor = db.session.execute(QUERY, {'email': email})
     row = db_cursor.fetchone()
-    print(row)
+    # print(row)
 
     return row
 
@@ -217,7 +225,7 @@ def display_movies():
     
 
 
-def get_random_movies(num_random):
+def get_random_movies(num_random, genre = None, decade = None):
     """ Returns a list with 3 random movies"""
 
     i=0
@@ -225,19 +233,49 @@ def get_random_movies(num_random):
 
     ia = IMDb()
 
+    if genre == None or decade == None:
+        while i < num_random :
+            random_id = random.choice(range(1,200000))
+            movie = ia.get_movie(random_id)
+            movie_list.append(movie)
+            i +=1
 
-    while i < num_random :
-        random_id = random.choice(range(1,200000))
-        movie = ia.get_movie(random_id)
-        movie_list.append(movie)
-        i +=1
+        print(movie_list)
+        print("get_random done")
+        return movie_list
 
-    print(movie_list)
-    print("get_random done")
-    return movie_list
+    else:
+        
+
+##################################################################
+
+@app.route("/pick_movie")
+def pick_a_movie():
+    """ Showing page where user can pick a movie"""
+
+    return render_template("pick_a_movie.html")
+
+
+##################################################################
+
+
+@app.route("/search")
+def search_movies():
+    """ More advanced search based on criteria"""
+
+
+    genre = request.args.get("genres") 
+    decade = request.args.get("decade")
 
 
 
+    return 
+
+
+def advanced_random():
+
+
+##################################################################
 
 
 
