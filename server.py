@@ -193,7 +193,8 @@ def display_movies():
 
             if 'cover url' in movie.keys():
 
-
+                movie_dbID = movie.movieID
+                print(movie_dbID)
                 title = movie['title']
                 released_at = movie['year']
                 poster = movie['cover url']
@@ -201,12 +202,12 @@ def display_movies():
 
 
                 QUERY = """
-                    INSERT INTO movies (title, released_at, poster)
-                    VALUES (:title, :released_at, :poster)
+                    INSERT INTO movies (movie_py, title, released_at, poster)
+                    VALUES (:movie_py, :title, :released_at, :poster)
                     """
 
                 db_cursor = db.session.execute(QUERY, {'title': title, 
-                                'released_at': released_at,  'poster':poster})
+                                'released_at': released_at,  'poster':poster, 'movie_py':movie_dbID})
 
 
                 db.session.commit()
@@ -225,7 +226,7 @@ def display_movies():
     
 
 
-def get_random_movies(num_random, genre = None, decade = None):
+def get_random_movies(num_random):
     """ Returns a list with 3 random movies"""
 
     i=0
@@ -233,19 +234,16 @@ def get_random_movies(num_random, genre = None, decade = None):
 
     ia = IMDb()
 
-    if genre == None or decade == None:
-        while i < num_random :
-            random_id = random.choice(range(1,200000))
-            movie = ia.get_movie(random_id)
-            movie_list.append(movie)
-            i +=1
+    while i < num_random :
+        random_id = random.choice(range(1,200000))
+        movie = ia.get_movie(random_id)
+        movie_list.append(movie)
+        i +=1
 
-        print(movie_list)
-        print("get_random done")
-        return movie_list
+    return movie_list
 
-    else:
-        
+    
+
 
 ##################################################################
 
@@ -266,13 +264,34 @@ def search_movies():
 
     genre = request.args.get("genres") 
     decade = request.args.get("decade")
+    show_movielist = []
+
+    ia = IMDb()
+
+    top = ia.get_top250_movies()
+
+    while len(show_movielist) < 3:
+
+        for movie in top:
+
+            if 'cover url' in movie.keys():
+
+                top_genre = movie['genres']
+                top_year = movie['year']
+                if genre in top_genre:
+                    if decade[:3] == top_year[:3]:
+                        show_movielist.append(movie)
+                    else:
+                        continue
+                else:
+                    continue
+            else:
+                continue
 
 
+    return render_template("your_movies.html", movies = show_movielist)
 
-    return 
 
-
-def advanced_random():
 
 
 ##################################################################

@@ -38,7 +38,7 @@ class Movie(db.Model):
     __tablename__ = "movies"
 
     movie_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    # movie_gbID = db.Column(db.Integer, nullable=False)
+    movie_py = db.Column(db.String(20), nullable=False)
     title = db.Column(db.String(200), nullable=False)
     released_at = db.Column(db.String(200), nullable=True)
     poster = db.Column(db.String(200), nullable=False)
