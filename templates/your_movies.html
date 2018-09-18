@@ -9,12 +9,18 @@
     Movie was released in {{ movie['year'] }} <br>
     <br>
     <img src="{{movie['cover url']}}">
+    <br>
+    <form id="wishlist">
+    <button class="btn"><i class="far fa-heart" id="heart{{movie.movieID}}"></i></button>
+    </form>
 
 {% endfor %}
 
 
 <br>
 <br>
+
+<script src="/static/wishlist.js"></script>
 
 
 {% endblock %}
