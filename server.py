@@ -177,25 +177,6 @@ def user_logOut():
 
 #####################################################################
 
-@app.route("/rmovies")
-def get_random_movies():
-    """ Store and then displaying selection of 3 random movies"""
-
-    i=0
-    movie_list = []
-
-
-    while i < 3 :
-        random_id = random.choice(range(1,45001))
-        # movie = ia.get_movie(random_id)
-        movie = Movie.query.get(random_id)
-
-        movie_list.append(movie)
-        i +=1
-
-    return redirect("/movies")
-
-
 
 
 #######################################################################
@@ -235,49 +216,7 @@ def display_movies():
     return render_template("your_movies.html", movies = movie_list)
 
 
-    # movie_list = get_random_movies(3)
-    # show_movies = []
-
-    # # while len(show_movies) < 3:
-
-    # for movie in movie_list:
-
-    #     # if 'cover url' in movie.keys():
-
-    #     #     movie_dbID = movie.movieID
-    #     #     print(movie_dbID)
-    #     #     title = movie['title']
-    #     #     released_at = movie['year']
-    #     #     poster = movie['cover url']
-
-
-
-    #     QUERY = """
-    #         INSERT INTO movies (movie_py, title, released_at, poster)
-    #         VALUES (:movie_py, :title, :released_at, :poster)
-    #                 """
-
-    #             db_cursor = db.session.execute(QUERY, {'title': title, 
-    #                             'released_at': released_at,  'poster':poster, 'movie_py':movie_dbID})
-
-
-    #             db.session.commit()
-    #             show_movies.append(movie)
-
-
-    #         else:
-    #             another_movie = get_random_movies(1)
-    #             movie_list.append(another_movie[0])
-
-
-    # return render_template("your_movies.html", movies = show_movies)    
-
-
     
-    
-
-
-
     
 
 
@@ -293,47 +232,6 @@ def pick_a_movie():
 ##################################################################
 
 
-@app.route("/search")
-def search_movies():
-    """ More advanced search based on criteria"""
-
-
-    genre = request.args.get("genres") 
-    decade = request.args.get("decade")
-    show_allmovielist = db.session.query(Movie).join(Genre).filter(Genre.gname == genre, Movie.released_at.like('{}%'.format(decade[:3])) ).all()
-    three_movies = []
-
-    for i in range(1,4):
-        three_movies.append(random.choice(show_allmovielist))
-        three_movies.remove(random.choice(show_allmovielist))
-
-    return redirect('/movies')
-
-    # ia = IMDb()
-
-    # top = ia.get_top250_movies()
-
-    # while len(show_movielist) < 3:
-
-    #     # for movie in top:
-
-    #         if 'cover url' in movie.keys():
-
-    #             top_genre = movie['genres']
-    #             top_year = movie['year']
-    #             if genre in top_genre:
-    #                 if decade[:3] == top_year[:3]:
-    #                     show_movielist.append(movie)
-    #                 else:
-    #                     continue
-    #             else:
-    #                 continue
-    #         else:
-    #             continue
-
-
-
-    # return render_template("your_movies.html", movies = show_movielist)
 
 
 

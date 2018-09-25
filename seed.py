@@ -36,7 +36,6 @@ def load_movies():
                 title = row['title']
             genres = row['genres']
             genres = eval(genres)
-            # print ("Genres")
             for genre in genres:
                 genre_id = genre['id']
                 genre_name = genre['name']
@@ -47,11 +46,8 @@ def load_movies():
                     new_genre = Genre (genre_id = genre_id, gname = genre_name)
                     genre_list.append(new_genre)
                     db.session.add(new_genre)
-                    print(genre_list)
-                    # print (new_genre)
                 else:
                     genre_list.append(exists)
-                    print(genre_list)
                     continue
 
 
@@ -74,12 +70,7 @@ def load_movies():
 
             movie.genres.extend(genre_list)
             db.session.add(movie)
-            # print("adding mappings")
-            # for genre in genres:
-            #     genre_id = genre['id']
-            #     genr_mov = GenresMovies (movie=movie, genre_id=genre_id)
-
-                # db.session.add(genr_mov)
+            
             
 
     db.session.commit()
