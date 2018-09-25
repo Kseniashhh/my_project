@@ -6,17 +6,20 @@
 
 <form action = "/movies" id="random">
     <input type="submit" value="Surprise me!"> <br>
+    <input type="text" name="type" value= "random" hidden>
 </form>
 <br>
 <h2> More advanced search </h2><br>
-<form action = '/search' id="search">
+<form action = '/movies' id="search">
+    <input type="text" name="type" value= "search" hidden>
+
     Select your genre: <select name="genres">
         <option selected disabled>Choose genre</option>
-        <option value="drama">Drama</option>
-        <option value="comedy">Comedy</option>
-        <option value="action">Action</option>
-        <option value="thriller">Thriller</option>
-        <option value="documentary">Documentary</option></select><br><br>
+        <option value="Drama">Drama</option>
+        <option value="Comedy">Comedy</option>
+        <option value="Action">Action</option>
+        <option value="Thriller">Thriller</option>
+        <option value="Documentary">Documentary</option></select><br><br>
     Select your decade: <select name="decade">
         <option selected disabled>Choose decade</option>
         <option value="1980s">1980s</option>

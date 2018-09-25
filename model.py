@@ -38,15 +38,56 @@ class Movie(db.Model):
     __tablename__ = "movies"
 
     movie_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    movie_py = db.Column(db.String(20), nullable=False)
+    imdb_id = db.Column(db.String(20), nullable=False)
     title = db.Column(db.String(200), nullable=False)
+    plot = db.Column(db.String(1000),nullable=False)
     released_at = db.Column(db.String(200), nullable=True)
     poster = db.Column(db.String(200), nullable=False)
+
+    genres = db.relationship('Genre', secondary = "gen_movies",backref = 'movies')
+
 
     def __repr__(self):
         """Provide helpful representation when printed."""
 
         return f"<Movie movie_id={self.movie_id} title={self.title}>"
+
+
+
+class Genre (db.Model):
+    """ Genres table """
+
+    __tablename__ = "genres"
+
+    genre_id = db.Column(db.Integer, primary_key=True)
+    gname = db.Column(db.String(30), nullable=False)
+    
+
+    def __repr__(self):
+        """Provide helpful representation when printed."""
+
+        return f"<Genre genre_id={self.genre_id} genre_name={self.gname}>"
+
+
+
+class GenresMovies (db.Model):
+    """ MovieIDs and genres mapping """
+
+    __tablename__ = "gen_movies"
+
+    mg_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    movie_id = db.Column(db.Integer, db.ForeignKey('movies.movie_id'), nullable=False)
+    genre_id = db.Column(db.Integer, db.ForeignKey('genres.genre_id'), nullable=False)
+
+    
+    
+
+    def __repr__(self):
+        """Provide helpful representation when printed."""
+
+        return f"<movie_id= {self.movie_id} genre_id={self.genre_id}>"
+
+
 
 
 
@@ -64,8 +105,8 @@ class MovieList(db.Model):
     recommended = db.Column(db.Boolean, nullable=True)
 
 
-    user = db.relationship('User', backref = 'users')
-    movie = db.relationship('Movie', backref = 'movies')
+    user = db.relationship('User', backref = 'movie_list')
+    movie = db.relationship('Movie', backref = 'movie_list')
 
     def __repr__(self):
         """Provide helpful representation when printed."""

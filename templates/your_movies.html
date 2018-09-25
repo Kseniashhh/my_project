@@ -5,14 +5,12 @@
 
 
 {% for movie in movies %}
-    <p> {{ movie['title']}} </p>
-    Movie was released in {{ movie['year'] }} <br>
+    <p> {{ movie.title}} </p>
+    Movie was released in {{ movie.released_at }} <br>
     <br>
-    <img src="{{movie['cover url']}}">
+    <img src="{{movie.poster}}">
     <br>
-    <form id="wishlist">
-    <button class="btn"><i class="far fa-heart" id="heart{{movie.movieID}}"></i></button>
-    </form>
+    <button class="btn"><i class="far fa-heart" id="heart{{movie.movie_id}}" data-movieID="{{movie.movie_id}}"></i></button>
 
 {% endfor %}
 

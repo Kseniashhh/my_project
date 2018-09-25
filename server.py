@@ -10,7 +10,7 @@ from model import connect_to_db, db
 from flask import (Flask, render_template, redirect, request, flash,
                    session)
 
-from model import User, Movie, MovieList, connect_to_db, db
+from model import User, Movie, MovieList, Genre, GenresMovies, connect_to_db, db
 
 import requests
 
@@ -23,6 +23,7 @@ import json
 import guidebox
 
 from datetime import datetime 
+
 
 
 # guidebox.api_key = os.environ['GUIDEBOX_TRIAL_KEY']
@@ -67,7 +68,6 @@ def if_username_exists():
     """ Checks if username is taken """
 
     username = request.args.get("username")
-    print(username + '1')
 
     QUERY = """
         SELECT username
@@ -83,7 +83,6 @@ def if_username_exists():
     else:
         user_name = "None"
 
-    print(user_name, "row in usename check")
 
     return user_name
 
@@ -125,7 +124,6 @@ def if_user_exists(email):
 
     db_cursor = db.session.execute(QUERY, {'email': email})
     row = db_cursor.fetchone()
-    # print(row)
 
     return row
 
@@ -179,68 +177,106 @@ def user_logOut():
 
 #####################################################################
 
-@app.route("/movies")
-def display_movies():
-    """ Store and then displaying selection of 3 movies"""
-
-
-    movie_list = get_random_movies(3)
-    show_movies = []
-
-    while len(show_movies) < 3:
-
-        for movie in movie_list:
-
-            if 'cover url' in movie.keys():
-
-                movie_dbID = movie.movieID
-                print(movie_dbID)
-                title = movie['title']
-                released_at = movie['year']
-                poster = movie['cover url']
-
-
-
-                QUERY = """
-                    INSERT INTO movies (movie_py, title, released_at, poster)
-                    VALUES (:movie_py, :title, :released_at, :poster)
-                    """
-
-                db_cursor = db.session.execute(QUERY, {'title': title, 
-                                'released_at': released_at,  'poster':poster, 'movie_py':movie_dbID})
-
-
-                db.session.commit()
-                show_movies.append(movie)
-
-
-            else:
-                another_movie = get_random_movies(1)
-                movie_list.append(another_movie[0])
-
-
-    return render_template("your_movies.html", movies = show_movies)    
-
-
-    
-    
-
-
-def get_random_movies(num_random):
-    """ Returns a list with 3 random movies"""
+@app.route("/rmovies")
+def get_random_movies():
+    """ Store and then displaying selection of 3 random movies"""
 
     i=0
     movie_list = []
 
-    ia = IMDb()
 
-    while i < num_random :
-        random_id = random.choice(range(1,200000))
-        movie = ia.get_movie(random_id)
+    while i < 3 :
+        random_id = random.choice(range(1,45001))
+        # movie = ia.get_movie(random_id)
+        movie = Movie.query.get(random_id)
+
         movie_list.append(movie)
         i +=1
 
-    return movie_list
+    return redirect("/movies")
+
+
+
+
+#######################################################################
+
+@app.route("/movies")
+def display_movies():
+    """ Display three movies on page """
+
+   
+    movie_list = []
+    i=0
+
+    what_type = request.args.get("type")
+
+
+    if what_type == "random":
+
+        while i < 3 :
+            random_id = random.choice(range(1,45001))
+            movie = Movie.query.get(random_id)
+
+            movie_list.append(movie)
+            i +=1
+
+    elif what_type == "search":
+        genre = request.args.get("genres") 
+        decade = request.args.get("decade")
+        show_allmovielist = db.session.query(Movie).join(GenresMovies).join(Genre).filter(Genre.gname == genre, Movie.released_at.like('{}%'.format(decade[:3])) ).all()
+        print(genre,decade,show_allmovielist)
+
+        for i in range(1,4):
+            movie_list.append(random.choice(show_allmovielist))
+            show_allmovielist.remove(random.choice(show_allmovielist))
+
+
+
+    return render_template("your_movies.html", movies = movie_list)
+
+
+    # movie_list = get_random_movies(3)
+    # show_movies = []
+
+    # # while len(show_movies) < 3:
+
+    # for movie in movie_list:
+
+    #     # if 'cover url' in movie.keys():
+
+    #     #     movie_dbID = movie.movieID
+    #     #     print(movie_dbID)
+    #     #     title = movie['title']
+    #     #     released_at = movie['year']
+    #     #     poster = movie['cover url']
+
+
+
+    #     QUERY = """
+    #         INSERT INTO movies (movie_py, title, released_at, poster)
+    #         VALUES (:movie_py, :title, :released_at, :poster)
+    #                 """
+
+    #             db_cursor = db.session.execute(QUERY, {'title': title, 
+    #                             'released_at': released_at,  'poster':poster, 'movie_py':movie_dbID})
+
+
+    #             db.session.commit()
+    #             show_movies.append(movie)
+
+
+    #         else:
+    #             another_movie = get_random_movies(1)
+    #             movie_list.append(another_movie[0])
+
+
+    # return render_template("your_movies.html", movies = show_movies)    
+
+
+    
+    
+
+
 
     
 
@@ -264,32 +300,81 @@ def search_movies():
 
     genre = request.args.get("genres") 
     decade = request.args.get("decade")
-    show_movielist = []
+    show_allmovielist = db.session.query(Movie).join(Genre).filter(Genre.gname == genre, Movie.released_at.like('{}%'.format(decade[:3])) ).all()
+    three_movies = []
 
-    ia = IMDb()
+    for i in range(1,4):
+        three_movies.append(random.choice(show_allmovielist))
+        three_movies.remove(random.choice(show_allmovielist))
 
-    top = ia.get_top250_movies()
+    return redirect('/movies')
 
-    while len(show_movielist) < 3:
+    # ia = IMDb()
 
-        for movie in top:
+    # top = ia.get_top250_movies()
 
-            if 'cover url' in movie.keys():
+    # while len(show_movielist) < 3:
 
-                top_genre = movie['genres']
-                top_year = movie['year']
-                if genre in top_genre:
-                    if decade[:3] == top_year[:3]:
-                        show_movielist.append(movie)
-                    else:
-                        continue
-                else:
-                    continue
-            else:
-                continue
+    #     # for movie in top:
+
+    #         if 'cover url' in movie.keys():
+
+    #             top_genre = movie['genres']
+    #             top_year = movie['year']
+    #             if genre in top_genre:
+    #                 if decade[:3] == top_year[:3]:
+    #                     show_movielist.append(movie)
+    #                 else:
+    #                     continue
+    #             else:
+    #                 continue
+    #         else:
+    #             continue
 
 
-    return render_template("your_movies.html", movies = show_movielist)
+
+    # return render_template("your_movies.html", movies = show_movielist)
+
+
+
+
+##################################################################
+
+
+@app.route('/add_to_wishlist', methods=['POST'])
+def add_to_wishlist():
+    """When user likes something we add to db"""
+
+    movie =  request.form.get('movie_py') 
+    print (movie_py)
+    print("this is server")
+
+    list_movie = MovieList.query.filter_by(movie_id=movie.movie_id, user_id=session['user'])
+
+    print(list_movie)
+    # movie = Movie.query.filter_by(movie_py=movie_py).one()
+
+
+
+    if list_movie == []:
+        now = datetime.now()
+        date_added = now.strftime('%Y/%m/%d %H:%M:%S')
+        new_like = MovieList(session['user'],movie_py, date_added,None, '1', None)
+        print (new_like)
+
+
+    elif list_movie[0].interested == None:
+        list_movie[0].interested = 1
+        print(movie)
+            
+    
+        
+
+    return "Success"
+
+
+
+
 
 
 

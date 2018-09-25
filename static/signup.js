@@ -12,7 +12,6 @@ function ValidatePsw(evt){
 
 function checkError(results) {
     let username = results;
-    console.log(username);
     if (username != "None"){
         alert("This username exists");
     }
@@ -21,7 +20,6 @@ function checkError(results) {
 
 function checkUsername() {
     $.get('/username_check',{username: $('#username').val()}, checkError);
-    console.log($('#username').val());
     console.log("Finished sending AJAX");
 }
 
