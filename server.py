@@ -103,6 +103,7 @@ def user_signsUp():
 
     if user_exists == None:
         add_user(username,email, pswd)
+        print("user doesn't exist")
         user_exists = if_user_exists(email)
         session['user'] = user_exists[0]
         return redirect("/")
@@ -243,11 +244,11 @@ def pick_a_movie():
 def add_to_wishlist():
     """When user likes something we add to db"""
 
-    movie =  request.form.get('movie_py') 
-    print (movie_py)
+    movie =  request.form.get('movie_id') 
+    print (movie)
     print("this is server")
 
-    list_movie = MovieList.query.filter_by(movie_id=movie.movie_id, user_id=session['user'])
+    list_movie = MovieList.query.filter_by(movie_id=movie, user_id=session['user']).all()
 
     print(list_movie)
     # movie = Movie.query.filter_by(movie_py=movie_py).one()
@@ -257,7 +258,9 @@ def add_to_wishlist():
     if list_movie == []:
         now = datetime.now()
         date_added = now.strftime('%Y/%m/%d %H:%M:%S')
-        new_like = MovieList(session['user'],movie_py, date_added,None, '1', None)
+        new_like = MovieList(user_id = session['user'],movie_id = movie, date_added = date_added,
+            rated_at = None, interested = 1, recommended = None)
+        db.session.add(new_like)
         print (new_like)
 
 
@@ -266,7 +269,8 @@ def add_to_wishlist():
         print(movie)
             
     
-        
+    db.session.commit()
+  
 
     return "Success"
 

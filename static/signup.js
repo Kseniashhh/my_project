@@ -14,6 +14,10 @@ function checkError(results) {
     let username = results;
     if (username != "None"){
         alert("This username exists");
+
+    }else {
+        let form_data = $("#signup").serialize();
+        window.location = '/user_added?' + form_data;
     }
     console.log("Finished checking username"); // after this form will be submitted
 }
