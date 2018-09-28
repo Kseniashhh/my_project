@@ -3,16 +3,26 @@
 
 <h1>Your movies</h1><br>
 
+<div class="container">
+  <div class="row">
+    {% for movie in movies %}
+    <div class="col">
+        <p> {{ movie.title}} </p>
+        Movie was released in {{ movie.released_at }} <br>
+        <br>
+        <div class="plotbox">
+            <img class = "img-fluid" src="{{movie.poster}}">
+            <div class="overlay" >
+                <div class="text">{{movie.plot}}</div>
+            </div>
+        </div>
+        <br>
+        <button class="btn"><i class="far fa-heart" id="heart{{movie.movie_id}}" data-movieID="{{movie.movie_id}}"></i></button>
+    </div>
+        {% endfor %}
+   </div>
+</div>
 
-{% for movie in movies %}
-    <p> {{ movie.title}} </p>
-    Movie was released in {{ movie.released_at }} <br>
-    <br>
-    <img src="{{movie.poster}}">
-    <br>
-    <button class="btn"><i class="far fa-heart" id="heart{{movie.movie_id}}" data-movieID="{{movie.movie_id}}"></i></button>
-
-{% endfor %}
 
 
 <br>

@@ -4,22 +4,36 @@
   <title>What do I want</title>
 <link rel = "stylesheet" href="/static/site.css">
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.11/css/all.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
 <script src="http://code.jquery.com/jquery.js"></script>
 
 </head>
 
-<body>
-  <a href= "/" class="logo">
-    <img src="/static/home_logo.png">
-  </a> 
-    {% if session.get('user') != None %}
-  <div>
-    <form action = '/logout'>
-        <input type='submit' value='LogOut'> 
-    </form>
-  </div>
+<body>  
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container">
+      <a class="navbar-brand" href="/"><i class="fas fa-film"></i></a>Whatiwant
+        <ul class="navbar-nav ml-auto">
+          {% if session.get('user') != None %}
+            <li class="nav-item">
+            <a class="nav-link" href="/wishlist"><i class="fas fa-heart top"></i></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/logout">LogOut</a>
+          </li>
+          {% else %}
+          <li class="nav-item">
+            <a class="nav-link" href="/login">LogIn</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/register">SignUp</a>
+          </li>
+      </ul>  
+    </div>
+  </nav>
+
   {% endif %}
-  <hr>
+  <!-- <hr> -->
 
   <div class="container">
 
@@ -36,5 +50,7 @@
 
 
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 </body>
 </html>
