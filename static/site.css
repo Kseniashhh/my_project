@@ -18,11 +18,10 @@ color: black;
     background-color: #e3f2fd;
 }
 
-/*img {
-    width:50%;  you can use % 
-    height: auto;
+.top {
+    margin-left: 30px;
+    margin-right: 150px;
 }
-*/
 
 .plotbox {
     position: relative;

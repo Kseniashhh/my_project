@@ -179,6 +179,14 @@ def user_logOut():
 #####################################################################
 
 
+@app.route("/wishlist")
+def display_wishlist():
+    """ Show movies that user liked"""
+
+    wishlist_list = db.session.query(Movie).join(MovieList).filter(MovieList.user_id == session['user'], MovieList.interested == True).all()
+
+    return render_template("wishlist.html", wish_list=wishlist_list)
+
 
 #######################################################################
 
@@ -206,7 +214,6 @@ def display_movies():
         genre = request.args.get("genres") 
         decade = request.args.get("decade")
         show_allmovielist = db.session.query(Movie).join(GenresMovies).join(Genre).filter(Genre.gname == genre, Movie.released_at.like('{}%'.format(decade[:3])) ).all()
-        print(genre,decade,show_allmovielist)
 
         for i in range(1,4):
             movie_list.append(random.choice(show_allmovielist))
@@ -245,13 +252,8 @@ def add_to_wishlist():
     """When user likes something we add to db"""
 
     movie =  request.form.get('movie_id') 
-    print (movie)
-    print("this is server")
-
+    
     list_movie = MovieList.query.filter_by(movie_id=movie, user_id=session['user']).all()
-
-    print(list_movie)
-    # movie = Movie.query.filter_by(movie_py=movie_py).one()
 
 
 
@@ -261,12 +263,10 @@ def add_to_wishlist():
         new_like = MovieList(user_id = session['user'],movie_id = movie, date_added = date_added,
             rated_at = None, interested = 1, recommended = None)
         db.session.add(new_like)
-        print (new_like)
 
 
     elif list_movie[0].interested == None:
         list_movie[0].interested = 1
-        print(movie)
             
     
     db.session.commit()

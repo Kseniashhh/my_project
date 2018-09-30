@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+<h1>Your wishlist</h1><br>
+
+
+{% if wish_list != None%}
+<div class="container">
+{% for movie in wish_list %}
+  <div class="row">
+    <div class="col">
+        <p> {{ movie.title}} </p>
+    </div>
+    <div class="col">
+        <p> {{ movie.poster}} </p>
+    </div>
+    <div class="col">
+        <p> {{ movie.plot}} </p></div>
+        <button class="btn">Remove from wishlist</button>
+    </div>
+   </div>
+{% endfor %}
+{% else %}
+ <div>
+ Your wishlist is empty
+ {% endif %}
+</div>
+
+</div>
+
+
+{% endblock %}
