@@ -2,29 +2,90 @@
 {% block content %}
 
 
-<!-- <p><a href="/movies">View all movies</a></p>
- -->
+
 
 <br>
 
-<!-- {% if session.get('user') == None %}
-  <div>
-    <h1 id="#main">What do I want</h1><br>
-    <button class="open-button" onclick="openForm()">Log In here</button>
-    <p>To register click <a href="/register">here</a></p>
-</div>
 
-  <div id="overlay" onclick="off()">
-    <div class="popup" id="#login_popup">
-        <form action = '/login'>
-            <h2> LogIn </h2>
-            Email/Username <input type="text" placeholder="Enter your email or username" name="email"><br>
-            Password <input type="password" placeholder="Enter your password" name="password"><br>
-            <input type="Submit" class="btn" value="Log In"> 
-        </form>     
+<div class="modal fade" id="loginPOP" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">LogIN</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="loginform" action="/">
+          <div class="form-group">
+            <label for="recipient-name" class="col-form-label">Email:</label>
+            <input type="text" class="form-control" placeholder="Enter your email" name="email" required>
+          </div>
+          <div class="form-group">
+            <label for="message-text" class="col-form-label">Password:</label>
+            <input type="password" placeholder="Enter your password" name="password" class="form-control" required>
+          </div>
+          <div>
+          <input type="submit" class="btn btn-primary" value="Log In">
+        </div>
+      </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
     </div>
   </div>
-{% endif %} -->
+</div>
+
+
+
+<div class="modal fade" id="signupPOP" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">SignUp</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="signupform">
+          <div class="form-group">
+            <label for="recipient-name" class="col-form-label">Email:</label>
+            <input type="text" class="form-control" placeholder="Enter your email" name="email" required>
+          </div>
+          <div class="form-group">
+            <label for="recipient-name" class="col-form-label">Username:</label>
+            <input type="text" class="form-control" placeholder="Enter your username" name="username" id="username" required>
+          </div>
+          <div class="form-group">
+            <label for="message-text" class="col-form-label">Password:</label>
+            <input type="password" placeholder="Enter your password" name="password" id="password" class="form-control" required>
+            <input type="checkbox" id="pwcheck" />Show Password
+          </div>
+          <div class="form-group">
+            <label for="message-text" class="col-form-label">Confirm password:</label>
+            <input type="password" placeholder="Confirm your password" name="confirm" id="confirm" class="form-control" required>
+            <input type="checkbox" id="confcheck" />Show Password
+          </div>
+          <div>
+          <input type="submit" class="btn btn-primary" value="Sign Up">
+        </div>
+      </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="/static/signup.js"></script>
+<script src="/static/popups.js"></script>
+
+
+
+
 
 <a href="/pick_movie"> pick your movie here </a>
 

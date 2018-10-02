@@ -24,10 +24,24 @@ import guidebox
 
 from datetime import datetime 
 
+from urllib.error import HTTPError
+from urllib.parse import quote
+from urllib.parse import urlencode
+
 
 
 # guidebox.api_key = os.environ['GUIDEBOX_TRIAL_KEY']
 # guidebox.region = "US"
+
+API_KEY = os.environ['YELP_API_KEY']
+
+API_HOST = 'https://api.yelp.com'
+SEARCH_PATH = '/v3/businesses/search'
+BUSINESS_PATH = '/v3/businesses/'
+DEFAULT_TERM = 'dinner'
+DEFAULT_LOCATION = 'San Francisco, CA' 
+SEARCH_LIMIT = 3
+
 
 app = Flask(__name__)
 
@@ -90,13 +104,13 @@ def if_username_exists():
 #####################################################################
 
 
-@app.route("/user_added")
+@app.route("/user_added",methods=['POST'])
 def user_signsUp():
     """ Register new user, ignore existing"""
 
-    email = request.args.get("email") 
-    pswd = request.args.get("password")
-    username = request.args.get("username")
+    email = request.form.get("email") 
+    pswd = request.form.get("password")
+    username = request.form.get("username")
     
 
     user_exists = if_user_exists(email)
@@ -106,10 +120,11 @@ def user_signsUp():
         print("user doesn't exist")
         user_exists = if_user_exists(email)
         session['user'] = user_exists[0]
-        return redirect("/")
+        # return redirect("/")
+        return "True"
     else:  
-        flash("This user is aleady registered. Please log in")
-        return redirect("/login")
+        return ("This user is aleady registered. Please log in")
+        # return redirect("/login")
 
 
 
@@ -158,6 +173,23 @@ def user_logIn():
 
     return redirect("/")
 
+####################################################################
+
+@app.route("/login_user.json", methods=['POST'])
+def user_login():
+    """ Logs user in """
+
+    email = request.form.get("email") 
+    pswd = request.form.get("password")
+
+    user_exists = User.query.filter_by(email=email, password=pswd).all()
+
+
+    if user_exists == None:
+        return jsonify('False')
+    else:  
+        session['user'] = user_exists[0]
+        return jsonify('True')
 
 ####################################################################
 
@@ -184,6 +216,7 @@ def display_wishlist():
     """ Show movies that user liked"""
 
     wishlist_list = db.session.query(Movie).join(MovieList).filter(MovieList.user_id == session['user'], MovieList.interested == True).all()
+    print (wishlist_list)
 
     return render_template("wishlist.html", wish_list=wishlist_list)
 
@@ -224,7 +257,42 @@ def display_movies():
     return render_template("your_movies.html", movies = movie_list)
 
 
-    
+##################################################################
+
+@app.route("/foods")
+def display_food():
+    """ Display three places on page """
+
+   
+    food_list = []
+    i=0
+
+    what_type = request.args.get("type")
+
+
+    if what_type == "random":
+
+        while i < 3 :
+            random_id = random.choice(range(1,45001))
+            food_path = BUSINESS_PATH + random_id
+            food_request = request(API_HOST, business_path, API_KEY)
+            print (food_request)
+
+            movie_list.append(food_request)
+            i +=1
+
+    elif what_type == "search":
+        food_type = request.args.get("type") 
+        zipcode = request.args.get("zipcode")
+        response = search(API_KEY,)
+
+        for i in range(1,4):
+            movie_list.append(random.choice(show_allmovielist))
+            show_allmovielist.remove(random.choice(show_allmovielist))
+
+
+
+    return render_template("your_movies.html", movies = movie_list)
     
 
 
@@ -239,6 +307,11 @@ def pick_a_movie():
 
 ##################################################################
 
+@app.route("/pick_food")
+def pick_a_restarant():
+    """ Showing page where user can pick a restaurant"""
+
+    return render_template("pick_food.html")
 
 
 
