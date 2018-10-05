@@ -8,7 +8,7 @@ from flask_debugtoolbar import DebugToolbarExtension
 from model import connect_to_db, db
 
 from flask import (Flask, render_template, redirect, request, flash,
-                   session)
+                   session,jsonify)
 
 from model import User, Movie, MovieList, Genre, GenresMovies, connect_to_db, db
 
@@ -18,7 +18,7 @@ from imdb import IMDb
 
 import random
 
-import json
+import json 
 
 import guidebox
 
@@ -182,14 +182,20 @@ def user_login():
     email = request.form.get("email") 
     pswd = request.form.get("password")
 
-    user_exists = User.query.filter_by(email=email, password=pswd).all()
-
+    user_exists = User.query.filter_by(email=email).first()
+    
 
     if user_exists == None:
-        return jsonify('False')
-    else:  
-        session['user'] = user_exists[0]
-        return jsonify('True')
+        return jsonify(user_exists.serialize())
+    elif user_exists.password == pswd:
+        session['user'] = user_exists.user_id
+        return jsonify(user_exists.serialize())
+    else:
+        return jsonify({"ERROR": "Wrong password"})
+
+
+
+    
 
 ####################################################################
 

@@ -24,6 +24,14 @@ class User(db.Model):
     created_date = db.Column(db.DateTime, nullable=False)
 
 
+    
+    def serialize(self):
+       """Return object data in easily serializeable format"""
+       return {
+                "email": self.email
+                }
+
+
     def __repr__(self):
         """Provide helpful representation when printed."""
 

@@ -17,14 +17,14 @@
         </button>
       </div>
       <div class="modal-body">
-        <form id="loginform" action="/">
+        <form id="loginform" method="POST">
           <div class="form-group">
             <label for="recipient-name" class="col-form-label">Email:</label>
-            <input type="text" class="form-control" placeholder="Enter your email" name="email" required>
+            <input type="text" class="form-control" placeholder="Enter your email" name="logemail" id="logemail" required>
           </div>
           <div class="form-group">
             <label for="message-text" class="col-form-label">Password:</label>
-            <input type="password" placeholder="Enter your password" name="password" class="form-control" required>
+            <input type="password" placeholder="Enter your password" name="logpassword" id="logpassword" class="form-control" required>
           </div>
           <div>
           <input type="submit" class="btn btn-primary" value="Log In">
@@ -50,7 +50,7 @@
         </button>
       </div>
       <div class="modal-body">
-        <form id="signupform">
+        <form id="signupform" method="POST">
           <div class="form-group">
             <label for="recipient-name" class="col-form-label">Email:</label>
             <input type="text" class="form-control" placeholder="Enter your email" name="email" required>
