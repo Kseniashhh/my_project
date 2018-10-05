@@ -104,7 +104,7 @@ def if_username_exists():
 #####################################################################
 
 
-@app.route("/user_added",methods=['POST'])
+@app.route("/user_added.json",methods=['POST'])
 def user_signsUp():
     """ Register new user, ignore existing"""
 

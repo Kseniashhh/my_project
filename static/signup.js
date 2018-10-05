@@ -19,18 +19,23 @@ function ValidatePsw(evt){
 
 function userAdded(results){
     let response = results;
-    if (response != 'True'){
+    if (response == 'True'){
         alert("User successfully registered");
+        $("#signupPOP").modal('hide')
     } else {
-        alert("This user is registered, please log in")
+        alert(response)
+        $("#signupPOP").modal('hide')
+
     }
 }
 
 
 
 function addUser() {
-    evt.preventDefault();
+    // console.log("what now")
+    // evt.preventDefault();
 
+    console.log("what now")
 
     let url = "/user_added.json";
     let formData = {
@@ -38,6 +43,7 @@ function addUser() {
         "password": $("#password").val(),
         "username": $("#username").val()
     };
+    console.log(formData)
     console.log("sending ajax signup");
     $.post(url, formData, userAdded);
 }
@@ -63,6 +69,7 @@ function checkError(results) {
         alert("This username is taken, please choose another one");
 
     }else {
+        console.log("I got this far");
         addUser();
     }
     console.log("Finished checking username"); // after this form will be submitted
