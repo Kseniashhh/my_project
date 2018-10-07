@@ -32,10 +32,7 @@ function userAdded(results){
 
 
 function addUser() {
-    // console.log("what now")
-    // evt.preventDefault();
 
-    console.log("what now")
 
     let url = "/user_added.json";
     let formData = {
@@ -43,25 +40,11 @@ function addUser() {
         "password": $("#password").val(),
         "username": $("#username").val()
     };
-    console.log(formData)
-    console.log("sending ajax signup");
     $.post(url, formData, userAdded);
 }
 
 
 
-
-// function checkError(results) {
-//     let username = results;
-//     if (username != "None"){
-//         alert("This username exists, please log in");
-
-//     }else {
-//         let form_data = $("#signupform").serialize();
-//         window.location = '/user_added?' + form_data;
-//     }
-//     console.log("Finished checking username"); // after this form will be submitted
-// }
 
 function checkError(results) {
     let username = results;
@@ -69,16 +52,12 @@ function checkError(results) {
         alert("This username is taken, please choose another one");
 
     }else {
-        console.log("I got this far");
         addUser();
     }
-    console.log("Finished checking username"); // after this form will be submitted
 }
 
 function checkUsername() {
     $.get('/username_check',{username: $('#username').val()}, checkError);
-    console.log($('#username').val());
-    console.log("Finished sending AJAX");
 }
 
 

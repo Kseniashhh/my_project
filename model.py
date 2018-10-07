@@ -55,6 +55,18 @@ class Movie(db.Model):
     genres = db.relationship('Genre', secondary = "gen_movies",backref = 'movies')
 
 
+
+    def mov_serial(self):
+       """Return object data in easily serializeable format"""
+       return {
+                "movie_id": self.movie_id,
+                "title": self.title,
+                "plot": self.plot,
+                "released_at": self.released_at,
+                "poster": self.poster
+                }
+
+
     def __repr__(self):
         """Provide helpful representation when printed."""
 

@@ -117,14 +117,12 @@ def user_signsUp():
 
     if user_exists == None:
         add_user(username,email, pswd)
-        print("user doesn't exist")
         user_exists = if_user_exists(email)
-        session['user'] = user_exists[0]
-        # return redirect("/")
+        session["user"] = user_exists[0]
+        session["seen"] = []
         return "True"
     else:  
         return ("This user is aleady registered. Please log in")
-        # return redirect("/login")
 
 
 
@@ -189,6 +187,7 @@ def user_login():
         return jsonify(user_exists.serialize())
     elif user_exists.password == pswd:
         session['user'] = user_exists.user_id
+        session['seen'] = []
         return jsonify(user_exists.serialize())
     else:
         return jsonify({"ERROR": "Wrong password"})
@@ -209,7 +208,8 @@ def user_logOut():
         return redirect("/")
         
     else:
-        session.pop('user')
+        session.pop("user")
+        session.pop("seen")
         flash("User is logged out")
         return redirect("/")
 
@@ -233,11 +233,20 @@ def display_wishlist():
 def display_movies():
     """ Display three movies on page """
 
-   
+    what_type = request.args.get("type")
+
+    mov_list = get_movies(what_type)
+    
+    return render_template("your_movies.html", movies = mov_list, type=what_type)
+
+
+
+
+def get_movies(what_type):
+    """ Get the list of 3 movies"""
+
     movie_list = []
     i=0
-
-    what_type = request.args.get("type")
 
 
     if what_type == "random":
@@ -245,22 +254,49 @@ def display_movies():
         while i < 3 :
             random_id = random.choice(range(1,45001))
             movie = Movie.query.get(random_id)
-
-            movie_list.append(movie)
-            i +=1
+            if movie.movie_id in session["seen"]:
+                continue
+            else:
+                movie_list.append(movie)
+                session["seen"].append(movie.movie_id)
+                i +=1
 
     elif what_type == "search":
         genre = request.args.get("genres") 
         decade = request.args.get("decade")
-        show_allmovielist = db.session.query(Movie).join(GenresMovies).join(Genre).filter(Genre.gname == genre, Movie.released_at.like('{}%'.format(decade[:3])) ).all()
+        show_allmovielist = db.session.query(Movie).join(GenresMovies).join(Genre).filter(Genre.gname == genre, Movie.released_at.like('{}%'.format(decade[:3])),).all()
+#add to the filter
+        while i < 3 :
+            mov = random.choice(show_allmovielist)
+            if mov.movie_id in session["seen"]:
+                show_allmovielist.remove(random.choice(show_allmovielist))
+                continue
+            else:
+                movie_list.append(mov)
+                session["seen"].append(mov.movie_id)
+                show_allmovielist.remove(random.choice(show_allmovielist))
+                i +=1
 
-        for i in range(1,4):
-            movie_list.append(random.choice(show_allmovielist))
-            show_allmovielist.remove(random.choice(show_allmovielist))
 
 
+    return movie_list
 
-    return render_template("your_movies.html", movies = movie_list)
+
+##################################################################
+
+@app.route("/more_movies.json")
+def show_more():
+    """ Show more movies when user clicks on more"""
+
+    what_type = request.args.get("type")
+
+    movielist = get_movies(what_type)
+    serialized_lst = []
+    for movie in movielist:
+        serialized_lst.append(movie.mov_serial())
+
+    return jsonify({"data": render_template("more.html", movies=serialized_lst,type=what_type)})
+
 
 
 ##################################################################

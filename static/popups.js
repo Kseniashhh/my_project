@@ -9,10 +9,8 @@ $("#login-Pop").on("click", function(evt){
 
 
 function checkUser(results) {
-    console.log("in check user fun")
 
     let user = results;
-    console.log(user)
     if (user.ERROR){
         alert("Wrong password");
     }else if (user != null){
@@ -21,7 +19,6 @@ function checkUser(results) {
         location.reload();
     }else {
         alert("This user doesn't exist. Please register")
-    console.log("Finished checking user"); // after this form will be submitted
 }
 }
 
@@ -37,8 +34,6 @@ $("#loginform").on("submit",function (evt) {
         "email": $("#logemail").val(),
         "password": $("#logpassword").val()
     };
-    console.log(formData)
-    console.log("sending ajax");
     $.post(url, formData, checkUser);
     return false;
 })

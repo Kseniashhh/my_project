@@ -1,16 +1,9 @@
-{% extends 'base.html' %}
-{% block content %}
 
-<h1>Your movies</h1>
-<span>
-    <button class="btn" id="more">More</button>
-    <input type="text" value={{type}} id="type" hidden></span>
-<br>
-
-<div class="container" id="movie-container">
+  <div class="container" id="movie-container">
   <div class="row" id="movie-row">
     {% for movie in movies %}
     <div class="col">
+        New template
         <p id="title"> {{ movie.title}} </p>
         Movie was released in <h3 id="year">{{ movie.released_at }} </h3><br>
         <br>
@@ -25,16 +18,7 @@
     </div>
         {% endfor %}
    </div>
-</div>
-
-
-
-<br>
-<br>
 
 <script src="/static/wishlist.js"></script>
-<script src="/static/more.js"></script>
 
 
-
-{% endblock %}
