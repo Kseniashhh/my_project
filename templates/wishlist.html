@@ -14,11 +14,11 @@
         <p> {{ movie.title}} </p>
     </div>
     <div class="col">
-        <img class = "img-fluid" src="{{movie.poster}}">
+        <img class = "img-fluid wish" src="{{movie.poster}}">
     </div>
     <div class="col">
         <p> {{ movie.plot}} </p></div>
-        <button class="btn">Remove from wishlist</button>
+        <button class="btn" id="remove" data-movID="{{movie.movie_id}}">Remove from wishlist</button>
     </div>
    </div>
 {% endfor %}
@@ -28,6 +28,9 @@
 
 
 </div>
+
+<script src="/static/remove.js"></script>
+
 
 
 {% endblock %}

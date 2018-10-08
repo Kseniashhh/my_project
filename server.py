@@ -362,13 +362,13 @@ def pick_a_restarant():
 ##################################################################
 
 
-@app.route('/add_to_wishlist', methods=['POST'])
+@app.route("/add_to_wishlist", methods=["POST"])
 def add_to_wishlist():
     """When user likes something we add to db"""
 
-    movie =  request.form.get('movie_id') 
+    movie =  request.form.get("movie_id") 
     
-    list_movie = MovieList.query.filter_by(movie_id=movie, user_id=session['user']).all()
+    list_movie = MovieList.query.filter_by(movie_id=movie, user_id=session["user"]).all()
 
 
 
@@ -390,8 +390,17 @@ def add_to_wishlist():
     return "Success"
 
 
+###################################################################
 
+@app.route("/remove_item", methods=['POST'])
+def remove_from_wishlist():
+    """Removing item from wishlist"""
+    mov_id = request.form.get("movie")
 
+    update_mov = MovieList.query.filter_by(user_id = session['user'],movie_id = mov_id).update(dict(interested = 0))
+    db.session.commit()
+    
+    return "Success. "
 
 
 
