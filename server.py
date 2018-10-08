@@ -289,8 +289,14 @@ def show_more():
     """ Show more movies when user clicks on more"""
 
     what_type = request.args.get("type")
+    # what_decade = request.args.get("decade")
+    # what_genre = request.args.get("genre")
+
+
+    print(what_type)
 
     movielist = get_movies(what_type)
+    print(movielist)
     serialized_lst = []
     for movie in movielist:
         serialized_lst.append(movie.mov_serial())
