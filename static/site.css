@@ -20,6 +20,11 @@ color: black;
     color: #ff66a3;
 }
 
+.fa-user-alt {
+    size: 3px;
+    color: #F6CEF5;
+}
+
 .navbar{
     background-color: #e3f2fd;
 }

@@ -3,6 +3,7 @@ from jinja2 import StrictUndefined
 import os
 
 from flask import Flask
+
 from flask_debugtoolbar import DebugToolbarExtension
 
 from model import connect_to_db, db
@@ -20,7 +21,7 @@ import random
 
 import json 
 
-import guidebox
+import API_funcs as ap
 
 from datetime import datetime 
 
@@ -33,14 +34,14 @@ from urllib.parse import urlencode
 # guidebox.api_key = os.environ['GUIDEBOX_TRIAL_KEY']
 # guidebox.region = "US"
 
-API_KEY = os.environ['YELP_API_KEY']
+# API_KEY = os.environ['YELP_API_KEY']
 
-API_HOST = 'https://api.yelp.com'
-SEARCH_PATH = '/v3/businesses/search'
-BUSINESS_PATH = '/v3/businesses/'
-DEFAULT_TERM = 'dinner'
-DEFAULT_LOCATION = 'San Francisco, CA' 
-SEARCH_LIMIT = 3
+# API_HOST = 'https://api.yelp.com'
+# SEARCH_PATH = '/v3/businesses/search'
+# BUSINESS_PATH = '/v3/businesses/'
+# # DEFAULT_TERM = 'dinner'
+# DEFAULT_LOCATION = 'San Francisco, CA' 
+# SEARCH_LIMIT = 3
 
 
 app = Flask(__name__)
@@ -194,7 +195,21 @@ def user_login():
 
 
 
-    
+####################################################################
+
+
+@app.route("/my_account")
+def show_my_account():
+    """ Rendering my account"""
+
+    current_user = User.get(user_id = session["user"])
+
+    num_movie = MovieList.query.filter_by(user_id=session,interested=1).count()
+    print(num_foods)
+    num_foods = 0
+
+
+    return render_template("my_account.html", user=current_user, mov_count=num_movie, food_count=num_foods)
 
 ####################################################################
 
@@ -309,39 +324,56 @@ def show_more():
 
 @app.route("/foods")
 def display_food():
-    """ Display three places on page """
-
-   
-    food_list = []
-    i=0
+    """ Display three food places on page """
 
     what_type = request.args.get("type")
+
+    mov_list = get_food(what_type)
+    
+    return render_template("your_food.html", foods = food_list, type=what_type)
+
+
+
+
+def get_food(what_type):
+    """ Get the list of 3 food places"""
+
+    food_list = []
+    i=0
 
 
     if what_type == "random":
 
         while i < 3 :
             random_id = random.choice(range(1,45001))
-            food_path = BUSINESS_PATH + random_id
-            food_request = request(API_HOST, business_path, API_KEY)
-            print (food_request)
-
-            movie_list.append(food_request)
-            i +=1
+            movie = Movie.query.get(random_id)
+            if movie.movie_id in session["seen"]:
+                continue
+            else:
+                movie_list.append(movie)
+                session["seen"].append(movie.movie_id)
+                i +=1
 
     elif what_type == "search":
-        food_type = request.args.get("type") 
-        zipcode = request.args.get("zipcode")
-        response = search(API_KEY,)
+        cuisine = request.args.get("cuisine") 
+        price = request.args.get("price")
+        show_allmovielist = db.session.query(Movie).join(GenresMovies).join(Genre).filter(Genre.gname == genre, Movie.released_at.like('{}%'.format(decade[:3])),).all()
+#add to the filter
+        while i < 3 :
+            mov = random.choice(show_allmovielist)
+            if mov.movie_id in session["seen"]:
+                show_allmovielist.remove(random.choice(show_allmovielist))
+                continue
+            else:
+                movie_list.append(mov)
+                session["seen"].append(mov.movie_id)
+                show_allmovielist.remove(random.choice(show_allmovielist))
+                i +=1
 
-        for i in range(1,4):
-            movie_list.append(random.choice(show_allmovielist))
-            show_allmovielist.remove(random.choice(show_allmovielist))
 
 
+    return movie_list
 
-    return render_template("your_movies.html", movies = movie_list)
-    
 
 
 ##################################################################

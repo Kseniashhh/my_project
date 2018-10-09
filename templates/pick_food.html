@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>Pick food place</h1><br>
+
+
+<form action = "/foods" id="random">
+    <input type="submit" value="Surprise me!"> <br>
+    <input type="text" name="type" value= "random" hidden>
+</form>
+<br>
+<h2> More advanced search </h2><br>
+<form action = '/foods' id="search">
+    <input type="text" name="type" value= "search" hidden>
+
+    Select cuisine: <select name="cuisine">
+        <option selected disabled>Choose cuisine</option>
+        <option value="Mediterranean">Mediterranean</option>
+        <option value="Chinese">Chinese</option>
+        <option value="Italian">Italian</option>
+        <option value="French">French</option>
+        <option value="American">American</option></select><br><br>
+    Select price group: <select name="decade">
+        <option selected disabled>Choose price group</option>
+        <option value="$$$$">$$$$</option>
+        <option value="$$$">$$$</option>
+        <option value="$$">$$</option>
+        <option value="$">$</option>
+    </select><br><br>
+
+    <input type="submit" value="Give me the best options"> <br>
+    
+</form>
+
+{% endblock %}
