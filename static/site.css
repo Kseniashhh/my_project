@@ -16,12 +16,12 @@ color: black;
 
 
 .top {
-    size: 3px;
+    size: 5px;
     color: #ff66a3;
 }
 
-.fa-user-alt {
-    size: 3px;
+.user {
+    size: 5px;
     color: #F6CEF5;
 }
 

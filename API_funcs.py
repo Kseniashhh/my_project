@@ -1,3 +1,4 @@
+import os
 import argparse
 import json
 import pprint
@@ -56,7 +57,7 @@ def search(api_key, term, price):
 
     url_params = {
         'term': term.replace(' ', '+'),
-        'price': location.replace(' ', '+'),
+        'price': price.replace(' ', '+'),
         'limit': SEARCH_LIMIT
     }
     print(url_params)

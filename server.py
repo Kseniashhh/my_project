@@ -202,11 +202,12 @@ def user_login():
 def show_my_account():
     """ Rendering my account"""
 
-    current_user = User.get(user_id = session["user"])
+    current_user = User.query.get(session["user"])
 
-    num_movie = MovieList.query.filter_by(user_id=session,interested=1).count()
-    print(num_foods)
+    num_movie = MovieList.query.filter_by(user_id=session["user"],interested=True).count()
     num_foods = 0
+    print(num_foods)
+
 
 
     return render_template("my_account.html", user=current_user, mov_count=num_movie, food_count=num_foods)
