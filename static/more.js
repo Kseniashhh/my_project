@@ -3,27 +3,22 @@
 
 function ShowMore(results){
     console.log(results);
-    // let movies = results;
-    // debugger;
     
-    // $("#movie-container").remove();
-    console.log("HELLP!!!!!")
     $("#movie-container").html(results.data);
-    // $("#movie-container").append(results.data);
 
 }
     
 
 
 $("#more").on("click",function () {
-    // evt.preventDefault();
-    // evt.stopImmediatePropagation();
-
     
-    // $.get("/more_movies.json",{"type": $("#type").val(), "decade": $("#decade").val(),"genre": $("#genre").val()}, ShowMore);
-    $.get("/more_movies.json",{"type": $("#type").val()}, ShowMore);
+    let formData = {
+        "type": $("#type").val(),
+        "genre": $("#genre").val(),
+        "decade": $("#decade").val()
+    };
+    
+    $.get("/more_movies.json",formData, ShowMore);
 
-    console.log("ajax sent");
-    console.log($("#type").val());
 })
 

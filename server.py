@@ -1,30 +1,17 @@
 from jinja2 import StrictUndefined
-
 import os
-
 from flask import Flask
-
 from flask_debugtoolbar import DebugToolbarExtension
-
 from model import connect_to_db, db
-
 from flask import (Flask, render_template, redirect, request, flash,
                    session,jsonify)
-
 from model import User, Movie, MovieList, Genre, GenresMovies, connect_to_db, db
-
 import requests
-
 from imdb import IMDb
-
 import random
-
 import json 
-
 import API_funcs as ap
-
 from datetime import datetime 
-
 from urllib.error import HTTPError
 from urllib.parse import quote
 from urllib.parse import urlencode
@@ -70,11 +57,11 @@ def index():
 
 #####################################################################
 
-@app.route('/register')
-def signup_page():
-    """ Page where user signs up """
+# @app.route('/register')
+# def signup_page():
+#     """ Page where user signs up """
 
-    return render_template("registration.html")
+#     return render_template("registration.html") #need to remove
 
 #####################################################################
 
@@ -88,7 +75,7 @@ def if_username_exists():
         SELECT username
         FROM users
         WHERE username = :username
-        """
+        """                                 # rewrite as SQL Alchemy
 
     db_cursor = db.session.execute(QUERY, {'username': username})
     row = db_cursor.fetchone()
@@ -106,7 +93,7 @@ def if_username_exists():
 
 
 @app.route("/user_added.json",methods=['POST'])
-def user_signsUp():
+def user_signs_Up():
     """ Register new user, ignore existing"""
 
     email = request.form.get("email") 
@@ -166,11 +153,11 @@ def add_user(username, email, password):
 ####################################################################
 
 
-@app.route("/login")
-def user_logIn():
-    """ Log in form"""
+# @app.route("/login")
+# def user_logIn():
+#     """ Log in form"""
 
-    return redirect("/")
+#     return redirect("/") #remove
 
 ####################################################################
 
@@ -251,14 +238,20 @@ def display_movies():
 
     what_type = request.args.get("type")
 
-    mov_list = get_movies(what_type)
+    genre = request.args.get("genre") 
+    decade = request.args.get("decade")
+
+
+
+    mov_list = get_movies(what_type,genre,decade)
+
     
-    return render_template("your_movies.html", movies = mov_list, type=what_type)
+    return render_template("your_movies.html", movies = mov_list, type=what_type, genre=genre, decade=decade)
 
 
 
 
-def get_movies(what_type):
+def get_movies(what_type,genre=None, decade=None):
     """ Get the list of 3 movies"""
 
     movie_list = []
@@ -275,24 +268,24 @@ def get_movies(what_type):
             else:
                 movie_list.append(movie)
                 session["seen"].append(movie.movie_id)
+
                 i +=1
 
     elif what_type == "search":
-        genre = request.args.get("genres") 
-        decade = request.args.get("decade")
-        show_allmovielist = db.session.query(Movie).join(GenresMovies).join(Genre).filter(Genre.gname == genre, Movie.released_at.like('{}%'.format(decade[:3])),).all()
-#add to the filter
-        while i < 3 :
-            mov = random.choice(show_allmovielist)
-            if mov.movie_id in session["seen"]:
-                show_allmovielist.remove(random.choice(show_allmovielist))
-                continue
-            else:
-                movie_list.append(mov)
-                session["seen"].append(mov.movie_id)
-                show_allmovielist.remove(random.choice(show_allmovielist))
-                i +=1
+        
+        filtered_movielist = db.session.query(Movie).join(GenresMovies).join(Genre).filter(Genre.gname == genre, Movie.released_at.like('{}%'.format(decade[:3])))
+        count_list = filtered_movielist.count()
+        remember_num = []
 
+        while i < 3:
+            mov_num = random.choice(range(1, count_list))
+            if mov_num not in remember_num:
+                mov = filtered_movielist.offset(mov_num).first()
+                remember_num.append(mov_num)
+                session["seen"].append(mov.movie_id)
+
+                movie_list.append(mov)
+                i +=1
 
 
     return movie_list
@@ -305,19 +298,18 @@ def show_more():
     """ Show more movies when user clicks on more"""
 
     what_type = request.args.get("type")
-    # what_decade = request.args.get("decade")
-    # what_genre = request.args.get("genre")
+    decade = request.args.get("decade")
+    genre = request.args.get("genre")
 
 
-    print(what_type)
 
-    movielist = get_movies(what_type)
-    print(movielist)
+    movielist = get_movies(what_type,genre, decade)
     serialized_lst = []
     for movie in movielist:
         serialized_lst.append(movie.mov_serial())
 
-    return jsonify({"data": render_template("more.html", movies=serialized_lst,type=what_type)})
+
+    return jsonify({"data": render_template("more.html", movies=serialized_lst,type=what_type,genre=genre, decade=decade)})
 
 
 
@@ -358,18 +350,46 @@ def get_food(what_type):
     elif what_type == "search":
         cuisine = request.args.get("cuisine") 
         price = request.args.get("price")
-        show_allmovielist = db.session.query(Movie).join(GenresMovies).join(Genre).filter(Genre.gname == genre, Movie.released_at.like('{}%'.format(decade[:3])),).all()
+        # show_allmovielist = db.session.query(Movie).join(GenresMovies).join(Genre).filter(Genre.gname == genre, Movie.released_at.like('{}%'.format(decade[:3])),).all()
 #add to the filter
-        while i < 3 :
-            mov = random.choice(show_allmovielist)
-            if mov.movie_id in session["seen"]:
-                show_allmovielist.remove(random.choice(show_allmovielist))
-                continue
-            else:
-                movie_list.append(mov)
+        # show_allmovielist = Movie.query.join(GenresMovies).join(Genre).filter(Genre.gname == genre, Movie.released_at.like('{}%'.format(decade[:3])),Movie.movie_id.notin_(session['seen'])).all()
+
+        filtered_movielist = Movie.query.join(GenresMovies).join(Genre).filter(Genre.gname == genre, Movie.released_at.like('{}%'.format(decade[:3])),Movie.movie_id.notin_(session['seen']))
+
+        count_list = filtered_movielist.count()
+        remember_num = []
+
+        while i < 3:
+            mov_num = random.choice(range(1, count_list))
+            if mov_num not in remember_num:
+                mov = filtered_movielist.offset(mov_num).first()
+                remember_num.append(mov_num)
                 session["seen"].append(mov.movie_id)
-                show_allmovielist.remove(random.choice(show_allmovielist))
+                movie_list.append(mov)
                 i +=1
+
+            
+            
+
+
+
+
+
+        # while i < 3 :
+        #     mov = random.choice(show_allmovielist)
+        #     session["seen"].append(mov.movie_id)
+        #     movie_list.append(mov)
+        #     show_allmovielist.remove(mov)
+
+
+            # if mov.movie_id in session["seen"]:
+            #     show_allmovielist.remove(random.choice(show_allmovielist))
+            #     continue
+            # else:
+            #     movie_list.append(mov)
+            #     session["seen"].append(mov.movie_id)
+            #     show_allmovielist.remove(random.choice(show_allmovielist))
+            #     i +=1
 
 
 
