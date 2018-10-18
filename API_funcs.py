@@ -17,7 +17,7 @@ SEARCH_PATH = '/v3/businesses/search'
 BUSINESS_PATH = '/v3/businesses/'
 # DEFAULT_TERM = 'dinner'
 DEFAULT_LOCATION = 'San Francisco, CA' 
-SEARCH_LIMIT = 3
+SEARCH_LIMIT = 1
 
 
 
@@ -46,7 +46,7 @@ def request(host, path, api_key, url_params=None):
     return response.json()
 
 
-def search(api_key, term, price):
+def search(api_key,location, term, price,offset):
     """Query the Search API by a search term and location.
     Args:
         term (str): The search term passed to the API.
@@ -56,70 +56,91 @@ def search(api_key, term, price):
     """
 
     url_params = {
+        'location': location,
         'term': term.replace(' ', '+'),
-        'price': price.replace(' ', '+'),
+        'price': price,
+        'offset': offset,
         'limit': SEARCH_LIMIT
     }
     print(url_params)
     return request(API_HOST, SEARCH_PATH, API_KEY, url_params=url_params)
 
 
-def get_business(api_key, business_id):
-    """Query the Business API by a business ID.
+
+
+def search_random(api_key, location, offset):
+    """Query the Search API by a search term and location.
     Args:
-        business_id (str): The ID of the business to query.
+        term (str): The search term passed to the API.
+        location (str): The search location passed to the API.
     Returns:
         dict: The JSON response from the request.
     """
-    business_path = BUSINESS_PATH + business_id
 
-    return request(API_HOST, business_path, API_KEY)
+    url_params = {
+        'location': location,
+        'offset': offset,
+        'limit': SEARCH_LIMIT
+    }
+    print(url_params)
+    return request(API_HOST, SEARCH_PATH, API_KEY, url_params=url_params)
 
+# def get_business(api_key, business_id):
+#     """Query the Business API by a business ID.
+#     Args:
+#         business_id (str): The ID of the business to query.
+#     Returns:
+#         dict: The JSON response from the request.
+#     """
+#     business_path = BUSINESS_PATH + business_id
 
-def query_api(term, location):
-    """Queries the API by the input values from the user.
-    Args:
-        term (str): The search term to query.
-        location (str): The location of the business to query.
-    """
-    response = search(API_KEY, term, location)
-
-    businesses = response.get('businesses')
-
-    if not businesses:
-        print(u'No businesses for {0} in {1} found.'.format(term, location))
-        return
-
-    business_id = businesses[0]['id']
-
-    print(u'{0} businesses found, querying business info ' \
-        'for the top result "{1}" ...'.format(
-            len(businesses), business_id))
-    response = get_business(API_KEY, business_id)
-
-    print(u'Result for business "{0}" found:'.format(business_id))
-    pprint.pprint(response, indent=2)
+#     return request(API_HOST, business_path, API_KEY)
 
 
-def main():
-    parser = argparse.ArgumentParser()
+# def query_api(term, location):
+#     """Queries the API by the input values from the user.
+#     Args:
+#         term (str): The search term to query.
+#         location (str): The location of the business to query.
+#     """
+#     response = search(API_KEY, term, location)
 
-    parser.add_argument('-q', '--term', dest='term', default=DEFAULT_TERM,
-                        type=str, help='Search term (default: %(default)s)')
-    parser.add_argument('-l', '--location', dest='location',
-                        default=DEFAULT_LOCATION, type=str,
-                        help='Search location (default: %(default)s)')
+#     businesses = response.get('businesses')
 
-    input_values = parser.parse_args()
+#     if not businesses:
+#         print(u'No businesses for {0} in {1} found.'.format(term, location))
+#         return
 
-    try:
-        query_api(input_values.term, input_values.location)
-    except HTTPError as error:
-        sys.exit(
-            'Encountered HTTP error {0} on {1}:\n {2}\nAbort program.'.format(
-                error.code,
-                error.url,
-                error.read(),
-            )
-        )
+#     business_id = businesses[0]['id']
+
+#     print(u'{0} businesses found, querying business info ' \
+#         'for the top result "{1}" ...'.format(
+#             len(businesses), business_id))
+#     response = get_business(API_KEY, business_id)
+
+#     print(u'Result for business "{0}" found:'.format(business_id))
+#     pprint.pprint(response, indent=2)
+
+
+# def main():
+#     parser = argparse.ArgumentParser()
+
+#     parser.add_argument('-q', '--term', dest='term', default=DEFAULT_TERM,
+#                         type=str, help='Search term (default: %(default)s)')
+#     parser.add_argument('-l', '--location', dest='location',
+#                         default=DEFAULT_LOCATION, type=str,
+#                         help='Search location (default: %(default)s)')
+
+#     input_values = parser.parse_args()
+
+#     try:
+#         query_api(input_values.term, input_values.location)
+#     except HTTPError as error:
+#         sys.exit(
+#             'Encountered HTTP error {0} on {1}:\n {2}\nAbort program.'.format(
+#                 error.code,
+#                 error.url,
+#                 error.read(),
+#             )
+#         )
 

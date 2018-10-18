@@ -9,21 +9,22 @@
 
 <br>
 
-<div class="container" id="movie-container">
-  <div class="row" id="movie-row">
-    {% for movie in movies %}
+<div class="container" id="foods-container">
+  <div class="row" id="food-row">
+    {% for food in foods %}
     <div class="col">
-        <p id="title"> {{ movie.title}} </p>
-        Movie was released in <h3 id="year">{{ movie.released_at }} </h3><br>
+        <p id="title"> {{ food['businesses'][0]['name']}} </p>
+
+        <h3 id="price">{{ food['businesses'][0].get('price', 'Mystery price')}} </h3><br>
         <br>
         <div class="plotbox">
-            <img class = "img-fluid" id="mov-img" src="{{movie.poster}}">
+            <img class = "img-fluid" id="food-img" src="{{food['businesses'][0]['image_url']}}">
             <div class="overlay" >
-                <div class="text" id="mov-plot">{{movie.plot}}</div>
+                <div class="text" id="food-location">{{food['businesses'][0]['location']['display_address']}}</div>
             </div>
         </div>
         <br>
-        <button class="btn"><i class="far fa-heart" id="heart{{movie.movie_id}}" data-movieID="{{movie.movie_id}}"></i></button>
+        <button class="btn"><i class="far fa-heart" id="heart{{food['businesses'][0]['id']}}" data-movieID="{{food['businesses'][0]['id']}}"></i></button>
     </div>
         {% endfor %}
    </div>
@@ -36,3 +37,5 @@
 
 <script src="/static/wishlist.js"></script>
 <script src="/static/more.js"></script>
+
+{% endblock %}
