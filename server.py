@@ -26,7 +26,7 @@ API_KEY = os.environ['YELP_API_KEY']
 API_HOST = 'https://api.yelp.com'
 SEARCH_PATH = '/v3/businesses/search'
 BUSINESS_PATH = '/v3/businesses/'
-# DEFAULT_TERM = 'dinner'
+DEFAULT_TERM = 'food'
 DEFAULT_LOCATION = 'San Francisco, CA' 
 SEARCH_LIMIT = 3
 
@@ -323,14 +323,31 @@ def display_food():
     """ Display three food places on page """
 
     what_type = request.args.get("type")
+    what_term = request.args.get("cuisine")
+    what_price = request.args.get("price")
+
+
+    food_list = get_food(what_type,what_term,what_price)
+
+    return render_template("your_food.html", foods = food_list, type=what_type)
+
+
+
+
+
+
+def get_food(what_type,what_term=None, what_price=None):
+    """ Function that returms list of foods"""
     i=0
     food_list =[]
+
+    
 
     if what_type == 'random':
 
         while i < 3 :
             random_off = random.choice(range(1,1001))
-            food_choice = ap.search_random(API_KEY, DEFAULT_LOCATION, random_off)
+            food_choice = ap.search_random(API_KEY, DEFAULT_LOCATION,DEFAULT_TERM, random_off)
             print(food_choice)
             print('\n'+ food_choice['businesses'][0]['id'])
             if food_choice['businesses'][0]['id'] in session["food_seen"]:
@@ -343,8 +360,8 @@ def display_food():
 
 
     else:
-        what_term = request.args.get("cuisine")
-        what_price = int(request.args.get("price"))
+        
+        print("searching by price ", what_price)
         while i < 3 :
             random_off = random.choice(range(1,1001))
             food_choice = ap.search(API_KEY, DEFAULT_LOCATION,what_term,what_price, random_off)
@@ -360,77 +377,11 @@ def display_food():
     print(food_list)
     # foods = jsonify(food_list)
 
-    return render_template("your_food.html", foods = food_list, type=what_type)
+    return food_list
 
 
 
 
-# def get_food(what_type):
-#     """ Get the list of 3 food places"""
-
-#     food_list = []
-#     i=0
-
-
-#     if what_type == "random":
-
-#         while i < 3 :
-#             random_id = random.choice(range(1,45001))
-#             movie = Movie.query.get(random_id)
-#             if movie.movie_id in session["seen"]:
-#                 continue
-#             else:
-#                 movie_list.append(movie)
-#                 session["seen"].append(movie.movie_id)
-#                 i +=1
-
-#     elif what_type == "search":
-#         cuisine = request.args.get("cuisine") 
-#         price = request.args.get("price")
-#         # show_allmovielist = db.session.query(Movie).join(GenresMovies).join(Genre).filter(Genre.gname == genre, Movie.released_at.like('{}%'.format(decade[:3])),).all()
-# #add to the filter
-#         # show_allmovielist = Movie.query.join(GenresMovies).join(Genre).filter(Genre.gname == genre, Movie.released_at.like('{}%'.format(decade[:3])),Movie.movie_id.notin_(session['seen'])).all()
-
-#         filtered_movielist = Movie.query.join(GenresMovies).join(Genre).filter(Genre.gname == genre, Movie.released_at.like('{}%'.format(decade[:3])),Movie.movie_id.notin_(session['seen']))
-
-#         count_list = filtered_movielist.count()
-#         remember_num = []
-
-#         while i < 3:
-#             mov_num = random.choice(range(1, count_list))
-#             if mov_num not in remember_num:
-#                 mov = filtered_movielist.offset(mov_num).first()
-#                 remember_num.append(mov_num)
-#                 session["seen"].append(mov.movie_id)
-#                 movie_list.append(mov)
-#                 i +=1
-
-            
-            
-
-
-
-
-
-#         # while i < 3 :
-#         #     mov = random.choice(show_allmovielist)
-#         #     session["seen"].append(mov.movie_id)
-#         #     movie_list.append(mov)
-#         #     show_allmovielist.remove(mov)
-
-
-#             # if mov.movie_id in session["seen"]:
-#             #     show_allmovielist.remove(random.choice(show_allmovielist))
-#             #     continue
-#             # else:
-#             #     movie_list.append(mov)
-#             #     session["seen"].append(mov.movie_id)
-#             #     show_allmovielist.remove(random.choice(show_allmovielist))
-#             #     i +=1
-
-
-
-#     return movie_list
 
 
 

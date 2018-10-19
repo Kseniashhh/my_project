@@ -3,10 +3,42 @@ text-decoration: none;
 color: black; 
 }
 
+a:hover {
+    color: grey;
+    text-decoration: none;
+}
+
+#back {
+  text-align: center;
+  padding-top: 20px;
+  padding-bottom: 30px;
+  padding-right: 10px;
+}
+
+.pick {
+  width: 400px;
+  margin: 0 auto;
+}
+
 h1 {
   text-align: center;
   padding-top: 20px;
   padding-bottom: 30px;
+}
+
+h2 {
+  padding-top: 20px;
+
+  text-align: center;
+  font-style: italic;
+  font-size: 18px;
+  background-color: white;
+  font-weight: 800;
+  font-family: "Trebuchet MS", Helvetica, sans-serif;
+}
+
+.buttonHolder{ 
+  text-align: center; 
 }
 
 #more {
@@ -26,7 +58,7 @@ h1 {
 #title {
   font-size: 16px;
   font-family: "Trebuchet MS", Helvetica, sans-serif; 
-  text-align: center;
+  text-align: left;
 
 
 }
@@ -103,4 +135,10 @@ h1 {
   transition: .5s ease;
   background-color: white;
   font-weight: 800;
+}
+
+
+#food-img {
+  height: 200px;
+  width: 300px;
 }

@@ -46,7 +46,7 @@ def request(host, path, api_key, url_params=None):
     return response.json()
 
 
-def search(api_key,location, term, price,offset):
+def search(api_key,location,term,price,offset):
     """Query the Search API by a search term and location.
     Args:
         term (str): The search term passed to the API.
@@ -68,7 +68,7 @@ def search(api_key,location, term, price,offset):
 
 
 
-def search_random(api_key, location, offset):
+def search_random(api_key, location,term, offset):
     """Query the Search API by a search term and location.
     Args:
         term (str): The search term passed to the API.
@@ -80,6 +80,7 @@ def search_random(api_key, location, offset):
     url_params = {
         'location': location,
         'offset': offset,
+        'term': term,
         'limit': SEARCH_LIMIT
     }
     print(url_params)

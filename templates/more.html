@@ -3,22 +3,22 @@
   <div class="row" id="movie-row">
     {% for movie in movies %}
     <div class="col">
-        New template
-        <p id="title"> {{ movie.title}} </p>
-        Movie was released in <h3 id="year">{{ movie.released_at }} </h3><br>
-        <br>
+        <p id="title"> {{ movie.title}} {{ movie.released_at }}</p>
+        
         <div class="plotbox">
-            <img class = "img-fluid" id="mov-img" src="{{movie.poster}}">
+            <img class = "float-center img-fluid movie" id="mov-img" src="{{movie.poster}}">
             <div class="overlay" >
                 <div class="text" id="mov-plot">{{movie.plot}}</div>
             </div>
         </div>
         <br>
-        <button class="btn"><i class="far fa-heart" id="heart{{movie.movie_id}}" data-movieID="{{movie.movie_id}}"></i></button>
+        <button class="btn"><i class="far fa-heart fa-2px" id="heart{{movie.movie_id}}" data-movieID="{{movie.movie_id}}"></i></button>
     </div>
         {% endfor %}
    </div>
 
 <script src="/static/wishlist.js"></script>
+<script src="/static/more.js"></script>
+
 
 
