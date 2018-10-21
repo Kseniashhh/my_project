@@ -329,6 +329,8 @@ def display_food():
 
     food_list = get_food(what_type,what_term,what_price)
 
+    print("food list is ", food_list)
+
     return render_template("your_food.html", foods = food_list, type=what_type)
 
 
@@ -364,7 +366,7 @@ def get_food(what_type,what_term=None, what_price=None):
         print("searching by price ", what_price)
         while i < 3 :
             random_off = random.choice(range(1,1001))
-            food_choice = ap.search(API_KEY, DEFAULT_LOCATION,what_term,what_price, random_off)
+            food_choice = ap.search(API_KEY, DEFAULT_LOCATION,what_term,'2,3', random_off)
             print(food_choice)
             print('\n'+ food_choice['businesses'][0]['id'] + '\n')
             if food_choice['businesses'][0]['id'] in session["food_seen"]:
@@ -380,6 +382,26 @@ def get_food(what_type,what_term=None, what_price=None):
     return food_list
 
 
+
+##################################################################
+
+@app.route("/more_food.json")
+def show_more_food():
+    """ Show more movies when user clicks on more"""
+
+    what_type = request.args.get("type")
+    price = request.args.get("price")
+    term = request.args.get("term")
+
+
+
+    food_list = get_food(what_type,price, term)
+    # serialized_lst = []
+    # for movie in movielist:
+    #     serialized_lst.append(movie.mov_serial())
+
+
+    return jsonify({"data": render_template("more_food.html", foods=food_list,type=what_type,price=price, term=term)})
 
 
 

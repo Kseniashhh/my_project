@@ -1,17 +1,3 @@
-{% extends 'base.html' %}
-{% block content %}
-
-
-<span>
-<a href="/pick_food" id="back">Go back to select</a>
-<h1>Your foods
-
-    <button class="btn btn-outline-dark" id="more">More</button></h1>
-    <input type="text" value={{type}} id="type" hidden></span>
-
-
-<br>
-
 <div class="container" id="food-container">
   <div class="row" id="movie-row">
     {% for food in foods %}
@@ -59,16 +45,6 @@
 </div>
 
 
-
-    
-
-
-<br>
-<br>
-
 <script src="/static/wishlist.js"></script>
-<script src="/static/more_food.js"></script>
+<script src="/static/more.js"></script>
 <script src="/static/googlelink.js"></script>
-
-
-{% endblock %}

@@ -22,3 +22,5 @@ function addToWishlist(evt){
 $('.fa-heart').on('click', addToWishlist);
 
 
+
+

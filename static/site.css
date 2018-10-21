@@ -50,6 +50,39 @@ h2 {
     color: red;
 }
 
+.fa-share {
+  color: #d9b3ff;
+}
+.fa-star {
+  color: #ffcc66;
+}
+
+.fa-yelp{
+  color: red;
+}
+
+.fa-star-half{
+  color: #ffcc66;
+}
+
+#loc {
+  color: #ff4d4d;
+  padding-right: 4px;
+}
+
+.heart {
+  padding-left: 0px;
+  padding-right: 0px;
+
+
+}
+
+#food-location {
+  padding-top: 15px;
+  font-family: "Trebuchet MS", Helvetica, sans-serif;
+  font-size: 14px;
+}
+
 .wish {
   height: 130px;
   width: 90px;
@@ -141,4 +174,5 @@ h2 {
 #food-img {
   height: 200px;
   width: 300px;
+  border-radius: 8px;
 }

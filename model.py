@@ -134,6 +134,31 @@ class MovieList(db.Model):
         return f"<Movie/user user_id={self.user_id} movie={self.movie_id}>"
 
 
+
+
+class FoodList(db.Model):
+    """ Favorite, recommended, planned to watch movies by user """
+
+    __tablename__ = "food_list"
+
+    flist_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
+    _id = db.Column(db.Integer, db.ForeignKey('movies.movie_id'))
+    date_added = db.Column(db.DateTime, nullable=False)
+    rated_at = db.Column(db.Integer, nullable=True)
+    interested = db.Column(db.Boolean, nullable=True)
+    recommended = db.Column(db.Boolean, nullable=True)
+
+
+    user = db.relationship('User', backref = 'movie_list')
+    movie = db.relationship('Movie', backref = 'movie_list')
+
+    def __repr__(self):
+        """Provide helpful representation when printed."""
+
+        return f"<Movie/user user_id={self.user_id} movie={self.movie_id}>"
+
+
 # class Rating(db.Model):
 #     """ Movies and its info """
 
