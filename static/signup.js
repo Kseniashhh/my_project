@@ -22,6 +22,7 @@ function userAdded(results){
     if (response == 'True'){
         alert("User successfully registered");
         $("#signupPOP").modal('hide')
+        location.reload();
     } else {
         alert(response)
         $("#signupPOP").modal('hide')

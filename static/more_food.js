@@ -14,10 +14,10 @@ $("#more").on("click",function () {
     
     let formData = {
         "type": $("#type").val(),
-        "price": $("#price").val(),
-        "term": $("#term").val()
+        "term": $("#cuisine").val(),
+        "price": $("#price").val()
     };
-    
+    console.log(formData)
     $.get("/more_food.json",formData, ShowMoreFood);
 
 })

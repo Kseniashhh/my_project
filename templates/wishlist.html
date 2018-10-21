@@ -2,7 +2,7 @@
 {% block content %}
 
 
-<h1>Your wishlist</h1><br>
+<h1>My wishlist</h1><br>
 
 
 <div class="container">
@@ -13,11 +13,17 @@
     <div class="col">
         <p> {{ movie.title}} </p>
     </div>
+    {% endfor %}
+    {% for movie in wish_list %}
     <div class="col">
         <img class = "img-fluid wish" src="{{movie.poster}}">
     </div>
+    {% endfor %}
+    {% for movie in wish_list %}
     <div class="col">
         <p> {{ movie.plot}} </p></div>
+    {% endfor %}
+    {% for movie in wish_list %}
         <button class="btn remove" id="remove" data-movID="{{movie.movie_id}}">Remove from wishlist</button>
     </div>
    </div>

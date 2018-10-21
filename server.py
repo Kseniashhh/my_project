@@ -5,7 +5,7 @@ from flask_debugtoolbar import DebugToolbarExtension
 from model import connect_to_db, db
 from flask import (Flask, render_template, redirect, request, flash,
                    session,jsonify)
-from model import User, Movie, MovieList, Genre, GenresMovies, connect_to_db, db
+from model import User, Movie, MovieList, Genre, GenresMovies, FoodList, Food, connect_to_db, db
 import requests
 from imdb import IMDb
 import random
@@ -329,9 +329,9 @@ def display_food():
 
     food_list = get_food(what_type,what_term,what_price)
 
-    print("food list is ", food_list)
+    # print("food list is ", food_list)
 
-    return render_template("your_food.html", foods = food_list, type=what_type)
+    return render_template("your_food.html", foods = food_list, type=what_type, term=what_term,price=what_price)
 
 
 
@@ -350,12 +350,12 @@ def get_food(what_type,what_term=None, what_price=None):
         while i < 3 :
             random_off = random.choice(range(1,1001))
             food_choice = ap.search_random(API_KEY, DEFAULT_LOCATION,DEFAULT_TERM, random_off)
-            print(food_choice)
-            print('\n'+ food_choice['businesses'][0]['id'])
+            # print(food_choice)
+            # print('\n'+ food_choice['businesses'][0]['id'])
             if food_choice['businesses'][0]['id'] in session["food_seen"]:
                 continue
             else:
-                food_list.append(food_choice)
+                food_list.append(food_choice['businesses'][0])
                 session["food_seen"].append(food_choice['businesses'][0]['id'])
                 i +=1
 
@@ -363,21 +363,27 @@ def get_food(what_type,what_term=None, what_price=None):
 
     else:
         
-        print("searching by price ", what_price)
+        # print("searching by price ", what_price)
         while i < 3 :
-            random_off = random.choice(range(1,1001))
-            food_choice = ap.search(API_KEY, DEFAULT_LOCATION,what_term,'2,3', random_off)
-            print(food_choice)
-            print('\n'+ food_choice['businesses'][0]['id'] + '\n')
-            if food_choice['businesses'][0]['id'] in session["food_seen"]:
+            # random_off = random.choice(range(1,1001))
+            food_choice = ap.search(API_KEY, DEFAULT_LOCATION,what_term,what_price)
+            print(len(food_choice['businesses']))
+            random_off = random.choice(range(1,len(food_choice['businesses'])))
+            print(random_off)
+            # print(food_choice['businesses'])
+            # print('\n'+ food_choice['businesses'][random_off]['id'] + '\n')
+            
+            if food_choice['businesses'][random_off]['id'] in session["food_seen"]:
                 continue
             else:
-                food_list.append(food_choice)
-                session["food_seen"].append(food_choice['businesses'][0]['id'])
+                food_list.append(food_choice['businesses'][random_off])
+                session["food_seen"].append(food_choice['businesses'][random_off]['id'])
                 i +=1
     
     print(food_list)
-    # foods = jsonify(food_list)
+
+    print("session: ")
+    print(session["food_seen"])
 
     return food_list
 
@@ -391,11 +397,11 @@ def show_more_food():
 
     what_type = request.args.get("type")
     price = request.args.get("price")
-    term = request.args.get("term")
+    term = request.args.get("cuisine")
 
 
 
-    food_list = get_food(what_type,price, term)
+    food_list = get_food(what_type,term,price)
     # serialized_lst = []
     # for movie in movielist:
     #     serialized_lst.append(movie.mov_serial())
@@ -445,12 +451,89 @@ def add_to_wishlist():
         now = datetime.now()
         date_added = now.strftime('%Y/%m/%d %H:%M:%S')
         new_like = MovieList(user_id = session['user'],movie_id = movie, date_added = date_added,
-            rated_at = None, interested = 1, recommended = None)
+            interested = 1, shared = None)
         db.session.add(new_like)
 
 
     elif list_movie[0].interested == None:
         list_movie[0].interested = 1
+            
+    
+    db.session.commit()
+  
+
+    return "Success"
+
+
+###################################################################
+
+@app.route("/add_to_wishlist_food", methods=["POST"])
+def add_to_wishlist_food():
+    """When user likes something we add to db"""
+
+    food_id =  request.form.get("food_id") 
+    print(food_id)
+    food = Food.query.filter_by(yelp_id=food_id).first()
+    print(food)
+
+    if food != None:
+        food_list = FoodList.query.filter_by(food_id=food.food_id, user_id=session["user"]).all()
+        print("food1")
+        print(food_list)
+    else:
+        new_food = Food(yelp_id=food, name=food['businesses'][0]['name'], 
+                        price=food['businesses'][0]['price'], rating=food['businesses'][0]['rating'],
+                        address = (food['businesses'][0]['location']['display_address'][0] + " " + food['businesses'][0]['location']['display_address'][1]), 
+                        image_url=food['businesses'][0]['image_url'])
+        print(new_food)
+        db.session.add(new_food)
+        db.session.commit()
+        food_list = FoodList.query.filter_by(food_id=food.food_id, user_id=session["user"]).all()
+        print("food2")
+        print(food_list)
+
+     
+        
+    if food_list == []:
+        now = datetime.now()
+        date_added = now.strftime('%Y/%m/%d %H:%M:%S')
+        # new_food = Food(yelp_id=food, name=food['businesses'][0]['name'], 
+        #                 price=food['businesses'][0]['price'], rating=food['businesses'][0]['rating'],
+        #                 address = (food['businesses'][0]['location']['display_address'][0] + " " + food['businesses'][0]['location']['display_address'][1]), 
+        #                 image_url=food['businesses'][0]['image_url'])
+        #     print(new_food)
+        #     db.session.add(new_food)
+        #     db.session.commit()
+
+        current_food = Food.query.filter_by(yelp_id=food)
+        new_food_like = FoodList(user_id = session['user'],food_id = food_id, date_added = date_added, 
+                            interested = 1, shared = None)
+        db.session.add(new_food_like)
+
+    elif food_list:
+        if food_list[0].interested == None:
+            food_list[0].interested = 1
+
+
+
+    # if food_list == []:
+    #     now = datetime.now()
+    #     date_added = now.strftime('%Y/%m/%d %H:%M:%S')
+    #     new_food = Food(yelp_id=food, name=food['businesses'][0]['name'], price=food['businesses'][0]['price'], rating=food['businesses'][0]['rating'],
+    #      address = (food['businesses'][0]['location']['display_address'][0] + " " + food['businesses'][0]['location']['display_address'][1]), 
+    #      image_url=food['businesses'][0]['image_url'])
+    #     print(new_food)
+    #     db.session.add(new_food)
+    #     db.session.commit()
+
+    #     current_food = Food.query.filter_by(yelp_id=food)
+    #     new_food_like = FoodList(user_id = session['user'],food_id = food_id, date_added = date_added, 
+    #         interested = 1, shared = None)
+    #     db.session.add(new_food_like)
+
+
+    # elif food_list[0].interested == None:
+    #     food_list[0].interested = 1
             
     
     db.session.commit()

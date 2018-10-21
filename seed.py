@@ -5,6 +5,8 @@ from model import MovieList
 from model import Movie
 from model import Genre
 from model import GenresMovies
+from model import Food
+from model import FoodList
 
 from model import connect_to_db, db
 from server import app

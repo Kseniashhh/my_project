@@ -120,9 +120,8 @@ class MovieList(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
     movie_id = db.Column(db.Integer, db.ForeignKey('movies.movie_id'))
     date_added = db.Column(db.DateTime, nullable=False)
-    rated_at = db.Column(db.Integer, nullable=True)
     interested = db.Column(db.Boolean, nullable=True)
-    recommended = db.Column(db.Boolean, nullable=True)
+    shared = db.Column(db.Boolean, nullable=True)
 
 
     user = db.relationship('User', backref = 'movie_list')
@@ -132,60 +131,55 @@ class MovieList(db.Model):
         """Provide helpful representation when printed."""
 
         return f"<Movie/user user_id={self.user_id} movie={self.movie_id}>"
+
+
+class Food(db.Model):
+    """ Food places and its info """
+
+    __tablename__ = "foods"
+
+    food_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    yelp_id = db.Column(db.String(20), nullable=False)
+    name = db.Column(db.String(200), nullable=False)
+    price = db.Column(db.String(1000),nullable=True)
+    rating = db.Column(db.String(1000),nullable=True)
+    address = db.Column(db.String(200), nullable=True)
+    image_url = db.Column(db.String(200), nullable=False)
+
+
+
+
+    def __repr__(self):
+        """Provide helpful representation when printed."""
+
+        return f"<Food food_id={self.food_id} name={self.name}>"
+
 
 
 
 
 class FoodList(db.Model):
-    """ Favorite, recommended, planned to watch movies by user """
+    """ Favorite, recommended, planned to visit food places by user """
 
     __tablename__ = "food_list"
 
     flist_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
-    _id = db.Column(db.Integer, db.ForeignKey('movies.movie_id'))
+    food_id = db.Column(db.Integer, db.ForeignKey('foods.food_id'))
     date_added = db.Column(db.DateTime, nullable=False)
-    rated_at = db.Column(db.Integer, nullable=True)
     interested = db.Column(db.Boolean, nullable=True)
-    recommended = db.Column(db.Boolean, nullable=True)
+    shared = db.Column(db.Boolean, nullable=True)
 
 
-    user = db.relationship('User', backref = 'movie_list')
-    movie = db.relationship('Movie', backref = 'movie_list')
+    user = db.relationship('User', backref = 'food_list')
+    food = db.relationship('Food', backref = 'food_list')
 
     def __repr__(self):
         """Provide helpful representation when printed."""
 
-        return f"<Movie/user user_id={self.user_id} movie={self.movie_id}>"
+        return f"<Food/user user_id={self.user_id} food={self.food_id}>"
 
 
-# class Rating(db.Model):
-#     """ Movies and its info """
-
-#     __tablename__ = "rating"
-
-#     rating_id = db.Column(db.Integer, 
-#                         autoincrement=True, 
-#                         primary_key=True)
-#     movie_id = db.Column(db.Integer, db.ForeignKey('movies.movie_id'))
-#     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
-#     score = db.Column(db.Integer, nullable=False)
-
-#     # Define relationship to user
-#     user = db.relationship("User",
-#                            backref=db.backref("ratings",
-#                                               order_by=rating_id))
-
-#     # Define relationship to movie
-#     movie = db.relationship("Movie",
-#                             backref=db.backref("ratings",
-#                                                order_by=rating_id))
-
-
-#     def __repr__(self):
-#         """Provide helpful representation when printed."""
-
-#         return f"<Rating rating_id={self.rating_id} score={self.score}>"
 
 ##############################################################################
 # Helper functions
