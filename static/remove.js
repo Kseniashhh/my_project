@@ -17,3 +17,6 @@ $(".remove").on("click", function(evt){
     $.post("/remove_item",{movie: this.dataset.movid}, removeItem)
     console.log(this.dataset.movid)
 });
+
+
+

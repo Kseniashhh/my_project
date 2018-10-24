@@ -16,6 +16,8 @@ from urllib.error import HTTPError
 from urllib.parse import quote
 from urllib.parse import urlencode
 
+from sqlalchemy import func
+
 
 
 # guidebox.api_key = os.environ['GUIDEBOX_TRIAL_KEY']
@@ -28,7 +30,7 @@ SEARCH_PATH = '/v3/businesses/search'
 BUSINESS_PATH = '/v3/businesses/'
 DEFAULT_TERM = 'food'
 DEFAULT_LOCATION = 'San Francisco, CA' 
-SEARCH_LIMIT = 3
+SEARCH_LIMIT = 1
 
 
 app = Flask(__name__)
@@ -54,14 +56,6 @@ def index():
     return render_template("homepage.html")
 
 
-
-#####################################################################
-
-# @app.route('/register')
-# def signup_page():
-#     """ Page where user signs up """
-
-#     return render_template("registration.html") #need to remove
 
 #####################################################################
 
@@ -154,15 +148,6 @@ def add_user(username, email, password):
 
 ####################################################################
 
-
-# @app.route("/login")
-# def user_logIn():
-#     """ Log in form"""
-
-#     return redirect("/") #remove
-
-####################################################################
-
 @app.route("/login_user.json", methods=['POST'])
 def user_login():
     """ Logs user in """
@@ -188,19 +173,108 @@ def user_login():
 ####################################################################
 
 
+@app.route("/mov_chart.json")
+def likes_data():
+    """Return data about liked content."""
+
+
+    results_count = db.session.query(Genre.gname, func.count(MovieList.interested)).join(GenresMovies).join(Movie).\
+                    join(MovieList).filter(MovieList.user_id==session["user"],MovieList.interested==True).group_by(Genre.gname).all()
+
+
+    print(results_count)
+    user_genres = []
+    genre_count = []
+
+    for genre,count in results_count:
+        user_genres.append(genre)
+        genre_count.append(count)
+
+    print(user_genres)
+    print(genre_count)
+
+    color_list=["#BC70A4", "#EADEDB","#6B5B95","#DBB1CD","#EC9787","#BE9EC9","#7F4145","#F3D6E4","#DAA990"]
+
+    need_cols = color_list[:len(user_genres)]
+
+
+
+    data_dict = {
+                "labels": user_genres,
+                "datasets": [
+                    {
+                        "data": genre_count,
+                        "backgroundColor": need_cols,
+                        "hoverBackgroundColor": need_cols
+                    }]
+            }
+    return jsonify(data_dict)
+
+
+
+
+######################################################################################
+
+
+@app.route("/food_chart.json")
+def likes_data_food():
+    """Return data about liked content."""
+
+
+    results_count = db.session.query(Food.term, func.count(FoodList.interested)).join(FoodList).\
+                    filter(FoodList.user_id==session["user"],FoodList.interested==True).group_by(Food.term).all()
+
+
+    print(results_count)
+    user_terms = []
+    term_count = []
+
+    for food,count in results_count:
+        user_terms.append(food)
+        term_count.append(count)
+
+    # print(user_genres)
+    # print(genre_count)
+
+    color_list=["#B5D279", "#85D68B","#39AC82","#75C653","#9FDFD2","#85AFD6","#75D1C0","#7CA437","#6E3DB8"]
+
+    need_cols = color_list[:len(user_terms)]
+
+
+
+    data_dict = {
+                "labels": user_terms,
+                "datasets": [
+                    {
+                        "data": term_count,
+                        "backgroundColor": need_cols,
+                        "hoverBackgroundColor": need_cols
+                    }]
+            }
+    return jsonify(data_dict)
+
+
+
+
+######################################################################################
+
+
 @app.route("/my_account")
 def show_my_account():
     """ Rendering my account"""
 
+
+
+
     current_user = User.query.get(session["user"])
 
-    num_movie = MovieList.query.filter_by(user_id=session["user"],interested=True).count()
-    num_foods = 0
-    print(num_foods)
+    # num_movie = MovieList.query.filter_by(user_id=session["user"],interested=True).count()
+    # num_foods = 0
+    # print(num_foods)
 
 
 
-    return render_template("my_account.html", user=current_user, mov_count=num_movie, food_count=num_foods)
+    return render_template("my_account.html", user=current_user)
 
 ####################################################################
 
@@ -227,10 +301,13 @@ def user_logOut():
 def display_wishlist():
     """ Show movies that user liked"""
 
-    wishlist_list = db.session.query(Movie).join(MovieList).filter(MovieList.user_id == session['user'], MovieList.interested == True).all()
-    print (wishlist_list)
+    wishlist_movies = db.session.query(Movie).join(MovieList).filter(MovieList.user_id == session['user'], MovieList.interested == True).all()
+    wishlist_foods = db.session.query(Food).join(FoodList).filter(FoodList.user_id == session['user'], FoodList.interested == True).all()
 
-    return render_template("wishlist.html", wish_list=wishlist_list)
+    # print (wishlist_movies)
+
+
+    return render_template("wishlist_new.html", liked_movies=wishlist_movies, liked_foods=wishlist_foods)
 
 
 #######################################################################
@@ -402,10 +479,7 @@ def show_more_food():
 
 
     food_list = get_food(what_type,term,price)
-    # serialized_lst = []
-    # for movie in movielist:
-    #     serialized_lst.append(movie.mov_serial())
-
+   
 
     return jsonify({"data": render_template("more_food.html", foods=food_list,type=what_type,price=price, term=term)})
 
@@ -472,41 +546,37 @@ def add_to_wishlist_food():
     """When user likes something we add to db"""
 
     food_id =  request.form.get("food_id") 
-    print(food_id)
-    food = Food.query.filter_by(yelp_id=food_id).first()
-    print(food)
+    food = ap.get_business(API_KEY,food_id)
+    check_food = Food.query.filter_by(yelp_id=food_id).first()
+    main_categories = ["Mediterranean", "Chinese", "French", "Italian","American", "Sushi","Thai","Indian"]
 
-    if food != None:
-        food_list = FoodList.query.filter_by(food_id=food.food_id, user_id=session["user"]).all()
-        print("food1")
-        print(food_list)
+    if check_food != None:
+        food_list = FoodList.query.filter_by(food_id=check_food.food_id, user_id=session["user"]).all()
+        
     else:
-        new_food = Food(yelp_id=food, name=food['businesses'][0]['name'], 
-                        price=food['businesses'][0]['price'], rating=food['businesses'][0]['rating'],
-                        address = (food['businesses'][0]['location']['display_address'][0] + " " + food['businesses'][0]['location']['display_address'][1]), 
-                        image_url=food['businesses'][0]['image_url'])
-        print(new_food)
+        print(food["categories"])
+        for alias in food["categories"]:
+            if alias["title"] in main_categories:
+                term = alias["title"]
+                break
+            else:
+                term = "Other" 
+        print(term)
+
+        new_food = Food(yelp_id=food_id, name=food["name"], 
+                        term=term,
+                        price=food["price"],
+                        address = (food["location"]["display_address"][0]+food["location"]["display_address"][1]), 
+                        image_url=food["image_url"])
         db.session.add(new_food)
         db.session.commit()
-        food_list = FoodList.query.filter_by(food_id=food.food_id, user_id=session["user"]).all()
-        print("food2")
-        print(food_list)
-
-     
+        food_list = FoodList.query.filter_by(food_id=new_food.food_id, user_id=session["user"]).all()
         
+
     if food_list == []:
         now = datetime.now()
         date_added = now.strftime('%Y/%m/%d %H:%M:%S')
-        # new_food = Food(yelp_id=food, name=food['businesses'][0]['name'], 
-        #                 price=food['businesses'][0]['price'], rating=food['businesses'][0]['rating'],
-        #                 address = (food['businesses'][0]['location']['display_address'][0] + " " + food['businesses'][0]['location']['display_address'][1]), 
-        #                 image_url=food['businesses'][0]['image_url'])
-        #     print(new_food)
-        #     db.session.add(new_food)
-        #     db.session.commit()
-
-        current_food = Food.query.filter_by(yelp_id=food)
-        new_food_like = FoodList(user_id = session['user'],food_id = food_id, date_added = date_added, 
+        new_food_like = FoodList(user_id = session['user'],food_id = new_food.food_id, date_added = date_added, 
                             interested = 1, shared = None)
         db.session.add(new_food_like)
 
@@ -514,27 +584,6 @@ def add_to_wishlist_food():
         if food_list[0].interested == None:
             food_list[0].interested = 1
 
-
-
-    # if food_list == []:
-    #     now = datetime.now()
-    #     date_added = now.strftime('%Y/%m/%d %H:%M:%S')
-    #     new_food = Food(yelp_id=food, name=food['businesses'][0]['name'], price=food['businesses'][0]['price'], rating=food['businesses'][0]['rating'],
-    #      address = (food['businesses'][0]['location']['display_address'][0] + " " + food['businesses'][0]['location']['display_address'][1]), 
-    #      image_url=food['businesses'][0]['image_url'])
-    #     print(new_food)
-    #     db.session.add(new_food)
-    #     db.session.commit()
-
-    #     current_food = Food.query.filter_by(yelp_id=food)
-    #     new_food_like = FoodList(user_id = session['user'],food_id = food_id, date_added = date_added, 
-    #         interested = 1, shared = None)
-    #     db.session.add(new_food_like)
-
-
-    # elif food_list[0].interested == None:
-    #     food_list[0].interested = 1
-            
     
     db.session.commit()
   

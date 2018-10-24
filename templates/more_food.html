@@ -3,7 +3,9 @@
     {% for food in foods %}
     <div class="col">
         <div class="col-sm">
-            <p id="title"> {{ food['name']}} </p>
+            <p><b id="title"> {{ food['name']}}</b> <br>
+            ({{food['categories'][0]['title']}})</p>
+
 
             <b id="price">Price:</b> {{ food.get('price', 'Mystery price')}}
             <div class="ratings">

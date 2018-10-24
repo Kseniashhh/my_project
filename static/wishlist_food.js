@@ -11,15 +11,17 @@ function addFoodLike(results){
 function addToWishlistFood(evt){
     if (this.classList.contains("far")){ 
         this.classList.replace("far","fas");
-        let formData = {
-            "food_id": this.dataset.foodid,
-            "name": $("#title").val(),
-            "price": $("#price").val(),
-            "rating": $("#rating").val(),
-            "address": $("#food-location").val(),
-            "img": $("#food-img").val()
-        }
-        $.post("/add_to_wishlist_food", formData, addFoodLike)
+        console.log(this.dataset.foodid);
+        // let formData = {
+        //     "food_id": this.dataset.foodid,
+        //     "name": $("#title").val(),
+        //     "price": $("#price").val(),
+        //     // "rating": $("#rating").val(),
+        //     "address": $("#location").val(),
+        //     "img": $("#food-img").val()
+        // }
+        // console.log(formData);
+        $.post("/add_to_wishlist_food", {food_id: this.dataset.foodid}, addFoodLike)
     } else {
         this.classList.replace("fas","far")
     }

@@ -139,10 +139,10 @@ class Food(db.Model):
     __tablename__ = "foods"
 
     food_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    yelp_id = db.Column(db.String(20), nullable=False)
+    yelp_id = db.Column(db.String(70), nullable=False)
+    term = db.Column(db.String(70), nullable=False)
     name = db.Column(db.String(200), nullable=False)
     price = db.Column(db.String(1000),nullable=True)
-    rating = db.Column(db.String(1000),nullable=True)
     address = db.Column(db.String(200), nullable=True)
     image_url = db.Column(db.String(200), nullable=False)
 

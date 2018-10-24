@@ -16,7 +16,7 @@ a:hover {
 }
 
 #title {
-  height: 48px;
+  height: 72px;
 }
 
 .pick {
@@ -180,3 +180,30 @@ h2 {
   width: 300px;
   border-radius: 8px;
 }
+
+
+
+.tab-content {
+  padding-top: 35px;
+  
+}
+
+
+.chart-container {
+  width:600px;
+  height:600px;
+  margin-left: 50px;
+}
+
+.charts-container{
+  padding-top: 40px;
+
+}
+
+.stats {
+  text-align: center;
+  font-weight: bolder;
+  font-family: "Trebuchet MS", Helvetica, sans-serif;
+  font-style: italic;
+}
+

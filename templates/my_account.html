@@ -6,15 +6,76 @@
 
 
 <div class="container">
-<form id="account_form">
+<!-- <form id="account_form">
     Username:<input type="text" name="username" value={{user.username}}><br>
     Email: <input type="text" name="email" value={{user.email}} ><br>
-    Number of <i class="fas fa-heart" id="count_m"></i> movies: {{mov_count}}<br>
-    Number of <i class="fas fa-heart" id="count_f"></i> dinner spots: {{food_count}}<br>
+   {# Number of <i class="fas fa-heart" id="count_m"></i> movies: {{mov_count}}<br> 
+       Number of <i class="fas fa-heart" id="count_f"></i> dinner spots: {{food_count}}<br> #}
     <button>Save</button>
-</form>
+</form> -->
 
+
+    <form>
+      <div class="form-group">
+        <div class="col-4">
+            <label for="exampleInputEmail1">Your username</label>
+            <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="email" value={{user.username}}>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-4">
+            <label for="exampleInputEmail1">Your email address</label>
+            <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="email" value={{user.email}}>
+            <small id="emailHelp" class="form-text text-muted">For eva eva</small>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-4">
+            <label for="exampleInputPassword1">Your current password</label>
+            <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Current password">
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-4">
+            <label for="exampleInputPassword1">Your new password</label>
+            <input type="password" class="form-control" id="newPassword" placeholder="New password">
+        </div>
+      </div>
+      
+      <button type="submit" class="btn btn-outline-dark">Update</button>
+    </form>
 </div>
+
+
+<div class="charts-container">
+    <div class="row">
+        <div class="col">
+            <p class="stats"> Movie statistics</p>
+
+            <div class="chart-container">
+                <div class="movie-chart">
+                    <canvas id="donutChart"></canvas>
+                    <!-- <div id="donutLegend" class="chart-legend"></div> -->
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <p class="stats"> Food statistics</p>
+
+            <div class="chart-container">
+                <div class="food-chart">
+                    <canvas id="foodChart"></canvas>
+                    <!-- <div id="donutLegend" class="chart-legend"></div> -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="/static/my_charts.js"></script>
+<script src="/static/food_chart.js"></script>
+
 
 
 

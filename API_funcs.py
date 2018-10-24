@@ -15,7 +15,6 @@ API_KEY = os.environ['YELP_API_KEY']
 API_HOST = 'https://api.yelp.com'
 SEARCH_PATH = '/v3/businesses/search'
 BUSINESS_PATH = '/v3/businesses/'
-# DEFAULT_TERM = 'dinner'
 DEFAULT_LOCATION = 'San Francisco, CA' 
 SEARCH_LIMIT = 1
 
@@ -86,16 +85,16 @@ def search_random(api_key, location,term, offset):
     print(url_params)
     return request(API_HOST, SEARCH_PATH, API_KEY, url_params=url_params)
 
-# def get_business(api_key, business_id):
-#     """Query the Business API by a business ID.
-#     Args:
-#         business_id (str): The ID of the business to query.
-#     Returns:
-#         dict: The JSON response from the request.
-#     """
-#     business_path = BUSINESS_PATH + business_id
+def get_business(api_key, business_id):
+    """Query the Business API by a business ID.
+    Args:
+        business_id (str): The ID of the business to query.
+    Returns:
+        dict: The JSON response from the request.
+    """
+    business_path = BUSINESS_PATH + business_id
 
-#     return request(API_HOST, business_path, API_KEY)
+    return request(API_HOST, business_path, API_KEY)
 
 
 # def query_api(term, location):
