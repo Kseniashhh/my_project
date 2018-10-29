@@ -64,12 +64,18 @@ function checkUsername() {
 
 function validateSubmit(evt) {
     evt.preventDefault();
+    evt.stopImmediatePropagation();
     ValidatePsw(evt);
     checkUsername();
+    return false;
+
 
 }
 
 $('#signupform').on('submit', validateSubmit);
+
+
+
 
 
 

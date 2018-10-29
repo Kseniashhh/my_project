@@ -225,7 +225,6 @@ def likes_data_food():
                     filter(FoodList.user_id==session["user"],FoodList.interested==True).group_by(Food.term).all()
 
 
-    print(results_count)
     user_terms = []
     term_count = []
 
@@ -233,8 +232,7 @@ def likes_data_food():
         user_terms.append(food)
         term_count.append(count)
 
-    # print(user_genres)
-    # print(genre_count)
+   
 
     color_list=["#B5D279", "#85D68B","#39AC82","#75C653","#9FDFD2","#85AFD6","#75D1C0","#7CA437","#6E3DB8"]
 
@@ -258,6 +256,94 @@ def likes_data_food():
 
 ######################################################################################
 
+@app.route('/info_check')
+def if_username_email_exists():
+    """ Checks if username and email are taken """
+
+    username = request.args.get("username")
+    email = request.args.get("email")
+
+    print(username,'+', email)
+
+
+
+    username_exists = User.query.filter_by(username=username).first()
+
+    email_exists = User.query.filter_by(email=email).first()
+
+    if (username_exists != None and email_exists != None):
+        return "This username and email already registered"
+    elif username_exists != None:
+        return "This username is already taken"
+    elif email_exists != None:
+        return "This email is already registered"
+    else:
+        current_user = User.query.get(session["user"])
+        current_user.username = username
+        current_user.email = email
+        db.session.commit()
+
+        return "Success"
+
+
+
+######################################################################################
+
+@app.route("/psw_check", methods=['POST'])
+def psw_check():
+    """ Checks if current psw matches the one in db """
+
+    pswd = request.form.get("psw")
+
+    print(pswd)
+
+    current_user = User.query.get(session["user"])
+
+    if current_user.password == pswd:
+        return "Success"
+        # return jsonify(msg="Success")
+        # {'msg': 'success'}
+    else:
+        return "Wrong"
+
+    
+
+
+######################################################################################
+
+
+@app.route("/psw_update", methods=['POST'])
+def psw_update():
+    """ Logs user in """
+
+    pswd = request.form.get("psw")
+
+    print(pswd)
+
+    current_user = User.query.get(session["user"])
+
+    current_user.password = pswd
+
+    db.session.commit()
+
+    return 'Success'
+
+
+    
+
+    # if user_exists == None:
+    #     return jsonify(user_exists.serialize())
+    # elif user_exists.password == pswd:
+    #     session['user'] = user_exists.user_id
+    #     session['seen'] = []
+    #     session['food_seen'] = []
+    #     return jsonify(user_exists.serialize())
+    # else:
+    #     return jsonify({"ERROR": "Wrong password"})
+
+
+######################################################################################
+
 
 @app.route("/my_account")
 def show_my_account():
@@ -267,10 +353,6 @@ def show_my_account():
 
 
     current_user = User.query.get(session["user"])
-
-    # num_movie = MovieList.query.filter_by(user_id=session["user"],interested=True).count()
-    # num_foods = 0
-    # print(num_foods)
 
 
 
@@ -596,10 +678,20 @@ def add_to_wishlist_food():
 @app.route("/remove_item", methods=['POST'])
 def remove_from_wishlist():
     """Removing item from wishlist"""
-    mov_id = request.form.get("movie")
+    content_id = request.form.get("content")
+    content_type = ''.join(list(content_id)[:3])
+    content_id = ''.join(list(content_id)[3:])
 
-    update_mov = MovieList.query.filter_by(user_id = session['user'],movie_id = mov_id).update(dict(interested = 0))
-    db.session.commit()
+    print(content_id, content_type)
+
+    if content_type == "mov":
+        update_mov = MovieList.query.filter_by(user_id = session['user'],movie_id = content_id).update(dict(interested = 0))
+        db.session.commit()
+
+        print (MovieList.query.filter_by(user_id = session['user'],movie_id = content_id).first())
+    elif content_type == "foo":
+        update_foo = FoodList.query.filter_by(user_id = session['user'],food_id = content_id).update(dict(interested = 0))
+        db.session.commit()
     
     return "Success. "
 

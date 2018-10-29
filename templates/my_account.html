@@ -6,43 +6,51 @@
 
 
 <div class="container">
-<!-- <form id="account_form">
-    Username:<input type="text" name="username" value={{user.username}}><br>
-    Email: <input type="text" name="email" value={{user.email}} ><br>
-   {# Number of <i class="fas fa-heart" id="count_m"></i> movies: {{mov_count}}<br> 
-       Number of <i class="fas fa-heart" id="count_f"></i> dinner spots: {{food_count}}<br> #}
-    <button>Save</button>
-</form> -->
 
 
-    <form>
+    <form id="updateForm" method="POST">
       <div class="form-group">
         <div class="col-4">
             <label for="exampleInputEmail1">Your username</label>
-            <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="email" value={{user.username}}>
+            <input type="username" class="form-control" id="update-username" name="username" value={{user.username}}>
         </div>
       </div>
       <div class="form-group">
         <div class="col-4">
-            <label for="exampleInputEmail1">Your email address</label>
-            <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="email" value={{user.email}}>
-            <small id="emailHelp" class="form-text text-muted">For eva eva</small>
+            <label>Your email address</label>
+            <input type="emails" class="form-control" id="update-email"  name="email" value={{user.email}}>
+            <small id="emailHelp" class="form-text text-muted">for eva eva</small>
         </div>
       </div>
+        <button type="submit" class="btn btn-outline-dark" id="update">Update</button>
+    </form>
+    <form id="psw-update" method="POST">
       <div class="form-group">
         <div class="col-4">
             <label for="exampleInputPassword1">Your current password</label>
-            <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Current password">
+            <input type="password" class="form-control" id="current-pswd" placeholder="Current password">
+            <small id="pswHelp" class="form-text text-muted">I hope you remember this one</small>
+
         </div>
       </div>
       <div class="form-group">
         <div class="col-4">
             <label for="exampleInputPassword1">Your new password</label>
             <input type="password" class="form-control" id="newPassword" placeholder="New password">
+            <small id="pswHelp" class="form-text text-muted">Must be 3-4 charachters long</small>
+
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-4">
+            <label for="exampleInputPassword1">Confirm new password</label>
+            <input type="password" class="form-control" id="confPassword" placeholder="Confirm password">
+            <small id="confpswHelp" class="form-text text-muted">Please remember it this time ok?</small>
+
         </div>
       </div>
       
-      <button type="submit" class="btn btn-outline-dark">Update</button>
+      <button type="submit" class="btn btn-outline-dark" id="pswupdate">Update password</button>
     </form>
 </div>
 
@@ -55,7 +63,6 @@
             <div class="chart-container">
                 <div class="movie-chart">
                     <canvas id="donutChart"></canvas>
-                    <!-- <div id="donutLegend" class="chart-legend"></div> -->
                 </div>
             </div>
         </div>
@@ -65,7 +72,6 @@
             <div class="chart-container">
                 <div class="food-chart">
                     <canvas id="foodChart"></canvas>
-                    <!-- <div id="donutLegend" class="chart-legend"></div> -->
                 </div>
             </div>
         </div>
@@ -75,6 +81,8 @@
 
 <script src="/static/my_charts.js"></script>
 <script src="/static/food_chart.js"></script>
+<script src="/static/update_info.js"></script>
+
 
 
 
