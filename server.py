@@ -3,10 +3,13 @@ import os
 from flask import Flask
 from flask_debugtoolbar import DebugToolbarExtension
 from model import connect_to_db, db
-from flask import (Flask, render_template, redirect, request, flash,
+from flask_oauth import OAuth
+from flask import (Flask, render_template, redirect, request, flash,url_for,
                    session,jsonify)
-from model import User, Movie, MovieList, Genre, GenresMovies, FoodList, Food, connect_to_db, db
+from model import User, Movie, MovieList, Genre, GenresMovies, FoodList, Food,GoogleUser, connect_to_db, db
 import requests
+from urllib.request import Request, urlopen, URLError
+
 from imdb import IMDb
 import random
 import json 
@@ -20,8 +23,11 @@ from sqlalchemy import func
 
 
 
-# guidebox.api_key = os.environ['GUIDEBOX_TRIAL_KEY']
-# guidebox.region = "US"
+# You must configure these 3 values from Google APIs console
+# https://code.google.com/apis/console
+GOOGLE_CLIENT_ID = os.environ['GOOGLE_CLIENT_ID']
+GOOGLE_CLIENT_SECRET = os.environ['GOOGLE_CLIENT_SECRET']
+REDIRECT_URI = '/oauth2callback'  # one of the Redirect URIs from Google APIs console
 
 API_KEY = os.environ['YELP_API_KEY']
 
@@ -32,6 +38,7 @@ DEFAULT_TERM = 'food'
 DEFAULT_LOCATION = 'San Francisco, CA' 
 SEARCH_LIMIT = 1
 
+oauth = OAuth()
 
 app = Flask(__name__)
 
@@ -44,6 +51,101 @@ app.secret_key = "ABC"
 app.jinja_env.undefined = StrictUndefined
 
 
+google = oauth.remote_app('google',
+                          base_url='https://www.google.com/accounts/',
+                          authorize_url='https://accounts.google.com/o/oauth2/auth',
+                          request_token_url=None,
+                          request_token_params={'scope': 'https://www.googleapis.com/auth/userinfo.email',
+                                                'response_type': 'code'},
+                          access_token_url='https://accounts.google.com/o/oauth2/token',
+                          access_token_method='POST',
+                          access_token_params={'grant_type': 'authorization_code'},
+                          consumer_key=GOOGLE_CLIENT_ID,
+                          consumer_secret=GOOGLE_CLIENT_SECRET)
+
+
+
+
+@app.route('/oauth_check')
+def oauth_index():
+    access_token = session.get('access_token')
+    if access_token is None:
+        return redirect(url_for('login'))
+ 
+    access_token = access_token[0]
+ 
+    headers = {'Authorization': 'OAuth '+access_token}
+    req = Request('https://www.googleapis.com/oauth2/v1/userinfo',
+                  None, headers)
+    try:
+        res = urlopen(req)
+    except e: #what a heck is it? exception? reserved letter for it?
+
+        if e.code == 401:
+            # Unauthorized - bad token
+            session.pop('access_token', None)
+            return redirect(url_for('login'))
+        return redirect("/")#add flash
+    
+    oauth_response = json.loads(res.read())
+    email = oauth_response["email"]
+    g_id = oauth_response["id"]
+    # print(oauth_response)
+    print("Here, adding new user - ", email, g_id)
+    print(type(email),type(g_id))
+    google_login(oauth_response["email"], oauth_response["id"])
+     
+
+    return redirect("/")
+
+
+def google_login(email, google_id):
+    """ Log in for google users"""
+
+
+    user_exists = User.query.filter_by(email=email).first()
+
+    if user_exists != None:
+        session["user"] = user_exists.user_id
+        session["seen"] = []
+        session["food_seen"] = []
+    else:
+        now = datetime.now()
+        created_date = now.strftime('%Y/%m/%d %H:%M:%S')
+        new_user = User(username=email,email=email,password=None, created_date = now)
+        db.session.add(new_user)
+        db.session.commit()
+        new_google_user = GoogleUser(user_id=new_user.user_id, google_id=google_id)
+        db.session.add(new_google_user)        
+        db.session.commit()
+        session["user"] = new_user.user_id
+        session["seen"] = []
+        session["food_seen"] = []
+
+
+    print(session)
+
+
+ 
+ 
+@app.route('/login')
+def login():
+    callback=url_for('authorized', _external=True)
+    return google.authorize(callback=callback)
+ 
+ 
+ 
+@app.route(REDIRECT_URI)
+@google.authorized_handler
+def authorized(resp):
+    access_token = resp['access_token']
+    session['access_token'] = access_token, ''
+    return redirect(url_for('oauth_index'))
+ 
+ 
+@google.tokengetter
+def get_access_token():
+    return session.get('access_token')
 
 
 
@@ -114,16 +216,18 @@ def user_signs_Up():
 def if_user_exists(email):
     """ Given email address checks if user already exists"""
 
-    QUERY = """
-        SELECT user_id, email
-        FROM users
-        WHERE email = :email
-        """
+    # QUERY = """
+    #     SELECT user_id, email
+    #     FROM users
+    #     WHERE email = :email
+    #     """
 
-    db_cursor = db.session.execute(QUERY, {'email': email})
-    row = db_cursor.fetchone()
+    find_user = User.query.filter_by(email=email).first()
 
-    return row
+    # db_cursor = db.session.execute(QUERY, {'email': email})
+    # row = db_cursor.fetchone()
+
+    return find_user
 
 
 

@@ -13,14 +13,14 @@ db = SQLAlchemy()
 # Model definitions
 
 class User(db.Model):
-    """User of ratings website."""
+    """User of website."""
 
     __tablename__ = "users"
 
     user_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     username = db.Column(db.String(64), nullable=False)
     email = db.Column(db.String(64), nullable=False)
-    password = db.Column(db.String(64), nullable=False)
+    password = db.Column(db.String(64), nullable=True)
     created_date = db.Column(db.DateTime, nullable=False)
 
 
@@ -38,7 +38,19 @@ class User(db.Model):
         return f"<User username={self.user_id} email={self.email}>"
 
 
-# Put your Movie and Rating model classes here.
+class GoogleUser(db.Model):
+    """Goggle tokens of g users."""
+
+    __tablename__ = "google_users"
+
+    guser_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
+    google_id = db.Column(db.String(200), nullable=False)
+
+    user = db.relationship('User', backref = 'google_users')
+
+
+
 
 class Movie(db.Model):
     """ Movies and its info """
