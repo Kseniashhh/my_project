@@ -16,20 +16,22 @@
       <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
         {% if liked_movies != [] %}
 
-            {% for movie in liked_movies %}
+            {% for movie in liked_movies%}
                 <div class="row-tab">
-                    <div class="col-3">
-                        <p> {{ movie.title}} </p>
+                  <div class="row wishrow h-100 justify-content-center align-items-center">
+                    <div class="col-3 text-center">
+                        <p class="wishtitle"> {{ movie.title}} </p>
                         <img class = "img-fluid wish" src="{{movie.poster}}">
                     </div>
-                    <div class="col-7">
+                    <div class="col-7 text-center wishtext">
                         <p> {{ movie.plot}} </p>
                     </div>
-                    <div class="col-2">
-                        <button class="btn remove" id="mremove" data-movID="mov{{movie.movie_id}}">Remove from wishlist</button>
+                    <div class="col-2 text-center">
+                        <button class="btn remove" id="mremove" data-movID="mov{{movie.movie_id}}"><i class="fas fa-trash-alt trash fa-3x"></i></button>
                         <!-- <input type="text" name="type" value= "movie" hidden> -->
 
-                    </div>    
+                    </div> 
+                  </div>     
                 </div>
                 {% endfor %}
         {% else %}
@@ -42,23 +44,26 @@
 
             {% for food in liked_foods %}
                 <div class="row-tab">
-                    <div class="col">
-                        <p> {{ food.name}} 
+                  <div class="row wishrow h-100 justify-content-center align-items-center">  
+                    <div class="col-3 text-center">
+                        <p class="wishtitle"> {{ food.name}} 
+                        </p>
+                        <img class = "img-fluid wishfood" src="{{food.image_url}}">
+                    </div>
+                    <div class="col-7 text-center wishtext">
+                        <p><address id="location"> {{ food.address}}</address><br>
+                        <b id="price">{{ food.price }}</b> <br>
+                        {{ food.term }}
                         </p>
                     </div>
-                    <div class="col">
-                        <img class = "img-fluid wish" src="{{food.image_url}}">
-                    </div>
-                    <div class="col">
-                        <p> {{ food.address}} 
-                        </p>
-                    </div>
-                    <div class="col">
-                        <button class="btn remove" id="fremove" data-movID="foo{{food.food_id}}">Remove from wishlist
+                    <div class="col-2 text-center">
+                         <button class="btn remove" id="fremove" data-movID="foo{{food.food_id}}"><i class="fas fa-trash-alt trash fa-3x"></i>
                         </button>
-                        <!-- <input type="text" name="type" value= "food" hidden> -->
+                    </div>
+                       
 
                     </div>
+                  </div>
             {% endfor %}
         {% else %}
             <p>Your wishlist is empty</p>

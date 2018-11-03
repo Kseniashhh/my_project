@@ -752,7 +752,7 @@ def add_to_wishlist_food():
         new_food = Food(yelp_id=food_id, name=food["name"], 
                         term=term,
                         price=food["price"],
-                        address = (food["location"]["display_address"][0]+food["location"]["display_address"][1]), 
+                        address = (food["location"]["display_address"][0]+ ', ' + food["location"]["display_address"][1]), 
                         image_url=food["image_url"])
         db.session.add(new_food)
         db.session.commit()

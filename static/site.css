@@ -81,6 +81,18 @@ h2 {
 
 }
 
+.trash {
+  color: gray;
+}
+
+.wishtext {
+  /*text-align: bottom;*/
+  font-size: 12px;
+  font-style: italic;
+  /*vertical-align: text-bottom;*/
+  height: 170px;
+}
+
 #food-location {
   padding-top: 15px;
   font-family: "Trebuchet MS", Helvetica, sans-serif;
@@ -90,6 +102,14 @@ h2 {
 .wish {
   height: 130px;
   width: 90px;
+  border-radius: 4px;
+}
+
+.wishfood {
+  height: 130px;
+  width: 170px;
+  border-radius: 4px;
+
 }
 
 #title {
@@ -188,6 +208,12 @@ h2 {
   
 }
 
+.wishtitle {
+  font-size: 16px;
+  font-family: "Trebuchet MS", Helvetica, sans-serif;
+
+}
+
 
 .chart-container {
   width:600px;
@@ -198,6 +224,10 @@ h2 {
 .charts-container{
   padding-top: 40px;
 
+}
+
+.wishrow {
+  margin-bottom: 35px;
 }
 
 .stats {
