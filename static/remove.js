@@ -6,7 +6,7 @@
 // function removeItem(results){
 //     alert(results + "Movie was removed from wishlist")
 //     location.reload();
-// }
+
 
 
 
@@ -24,7 +24,7 @@
 
 
 function removeItem(results){
-    alert(results + "Food was removed from wishlist")
+    // alert(results + "Item was removed from wishlist")
     location.reload();
 }
 

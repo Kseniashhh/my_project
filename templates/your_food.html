@@ -6,7 +6,7 @@
 <a href="/pick_food" id="back">Go back to select</a>
 <h1>Your foods
 
-    <button class="btn btn-outline-dark" id="more">More</button></h1>
+    <button class="btn btn-outline-dark" id="more">Show more</button></h1>
     <input type="text" value={{type}} id="type" hidden>
     <input type="text" value={{term}} id="cuisine" hidden>
     <input type="text" value={{price}} id="hidden-price" hidden></span>
@@ -19,7 +19,7 @@
     {% for food in foods %}
     <div class="col">
         <div class="col-sm">
-            <p><b id="title"> {{ food['name']}} </b><br>
+            <p class="ptitle"><b id="title"> {{ food['name']}} </b><br>
             ({{food['categories'][0]['title']}})</p>
 
             <b id="price">Price:</b> {{ food.get('price', 'Mystery price')}}

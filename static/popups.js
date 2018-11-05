@@ -13,12 +13,15 @@ function checkUser(results) {
     let user = results;
     if (user.ERROR){
         alert("Wrong password");
+        
     }else if (user != null){
         alert("User was successfuly logged in");
+      
         $("#loginPOP").modal('hide');
         location.reload();
     }else {
         alert("This user doesn't exist. Please register")
+        
 }
 }
 

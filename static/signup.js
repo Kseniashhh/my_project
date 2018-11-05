@@ -8,13 +8,6 @@ $("#signup-Pop").on("click", function(evt){
 
 
 
-function ValidatePsw(evt){
-    if ($("#password").val() != $("#confirm").val()){
-        alert("Passwords don't match");
-        evt.preventDefault();
-    }
-}
-
 
 
 function userAdded(results){
@@ -49,6 +42,7 @@ function addUser() {
 
 function checkError(results) {
     let username = results;
+    console.log(username);
     if (username != "None"){
         alert("This username is taken, please choose another one");
 
@@ -65,8 +59,13 @@ function checkUsername() {
 function validateSubmit(evt) {
     evt.preventDefault();
     evt.stopImmediatePropagation();
-    ValidatePsw(evt);
-    checkUsername();
+    if ($("#password").val() != $("#confirm").val()){
+         alert("Passwords don't match");
+         evt.preventDefault();
+     } else {
+        checkUsername();
+     }
+    
     return false;
 
 

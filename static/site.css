@@ -15,7 +15,7 @@ a:hover {
   padding-right: 10px;
 }
 
-#title {
+.ptitle {
   height: 72px;
 }
 
@@ -24,9 +24,29 @@ a:hover {
   margin: 0 auto;
 }
 
+.label {
+  font-size: 14px;
+}
+
+.fa-google{
+  color: #E9BED8;
+ /* border: 2px;
+  border-color: black;*/
+}
+
+.or {
+  text-align: center;
+}
+
+.checkbox-label {
+  font-size: 14px;
+  color: gray;
+}
+
+
 h1 {
   text-align: center;
-  padding-top: 5px;
+  padding-top: 10px;
   padding-bottom: 30px;
 }
 
@@ -86,11 +106,21 @@ h2 {
 }
 
 .wishtext {
-  /*text-align: bottom;*/
   font-size: 12px;
   font-style: italic;
-  /*vertical-align: text-bottom;*/
   height: 170px;
+  display: flex;
+
+}
+
+.wtext {
+  align-self: flex-end;
+
+}
+
+.ftext {
+  align-self: center;
+  text-align: center;
 }
 
 #food-location {
@@ -235,5 +265,9 @@ h2 {
   font-weight: bolder;
   font-family: "Trebuchet MS", Helvetica, sans-serif;
   font-style: italic;
+}
+
+.homepage {
+
 }
 

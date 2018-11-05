@@ -1,54 +1,22 @@
 "use strict";
 
-// function userAdded(results){
-//     let response = results;
-//     if (response == 'True'){
-//         alert("User successfully registered");
-//         $("#signupPOP").modal('hide')
-//         location.reload();
-//     } else {
-//         alert(response)
-//         $("#signupPOP").modal('hide')
-
-//     }
-// }
-
-
-
-// function UpdateUser() {
-
-
-//     let url = "/user_update.json";
-//     let formData = {
-//         "email": $("#email").val(),
-//         "password": $("#password").val(),
-//         "username": $("#username").val()
-//     };
-//     $.post(url, formData, userAdded);
-// }
-
-
-
 
 function checkPass(results) {
     let username = results;
     console.log(username);
     if (username == 'Success'){
-        alert("User's info was successfully updated!")
         location.reload();
     } else if (username == "This email is already registered") {
-        alert(username)
+        $(".alert-danger strong").html("This email is already registered");
+        $(".alert-danger").attr("hidden", false)
     } else if (username == "This username is already taken") {
-        alert(username)
+        $(".alert-danger strong").html("This username is already registered");
+        $(".alert-danger").attr("hidden", false)
     } else if (username == "This username and email already registered"){
-        alert(username)
+        $(".alert-danger strong").html("This username and email already registered");
+        $(".alert-danger").attr("hidden", false)
     }
-//     if (username != "None"){
-//         alert("This username is taken, please choose another one");
 
-//     }else {
-//         UpdateUser();
-//     }
  }
 
 function checkInfoExist() {
@@ -96,7 +64,8 @@ function checkPSW() {
             updatePswrd();
         }
         else {
-            alert("Incorrect current password!")
+            $(".alert-danger strong").html("Incorrect current password!");
+            $(".alert-danger").attr("hidden", false)
         }
     })
 }
@@ -107,7 +76,8 @@ function updatePswrd() {
 
     $.post("/psw_update", {psw: $("#newPassword").val()}, function (results) {
         let res = results
-        alert("Your password was successfully updated!");
+        // alert("Your password was successfully updated!");
+
         location.reload();
         console.log(results);
 

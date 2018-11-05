@@ -85,15 +85,14 @@ def oauth_index():
             # Unauthorized - bad token
             session.pop('access_token', None)
             return redirect(url_for('login'))
-        return redirect("/")#add flash
+        flash("there was an error please try again")
+        return redirect("/")
     
     oauth_response = json.loads(res.read())
     email = oauth_response["email"]
     g_id = oauth_response["id"]
-    # print(oauth_response)
-    print("Here, adding new user - ", email, g_id)
-    print(type(email),type(g_id))
     google_login(oauth_response["email"], oauth_response["id"])
+    print(session["user_id"])
      
 
     return redirect("/")
@@ -106,7 +105,7 @@ def google_login(email, google_id):
     user_exists = User.query.filter_by(email=email).first()
 
     if user_exists != None:
-        session["user"] = user_exists.user_id
+        session["user_id"] = user_exists.user_id
         session["seen"] = []
         session["food_seen"] = []
     else:
@@ -118,7 +117,7 @@ def google_login(email, google_id):
         new_google_user = GoogleUser(user_id=new_user.user_id, google_id=google_id)
         db.session.add(new_google_user)        
         db.session.commit()
-        session["user"] = new_user.user_id
+        session["user_id"] = new_user.user_id
         session["seen"] = []
         session["food_seen"] = []
 
@@ -166,23 +165,13 @@ def if_username_exists():
     """ Checks if username is taken """
 
     username = request.args.get("username")
+    check_username = User.query.filter_by(username=username).first()
+    
 
-    QUERY = """
-        SELECT username
-        FROM users
-        WHERE username = :username
-        """                                 # rewrite as SQL Alchemy
-
-    db_cursor = db.session.execute(QUERY, {'username': username})
-    row = db_cursor.fetchone()
-
-    if row:
-        user_name = row[0]
+    if check_username != None:
+        return check_username.username
     else:
-        user_name = "None"
-
-
-    return user_name
+        return "None"
 
 
 #####################################################################
@@ -202,7 +191,7 @@ def user_signs_Up():
     if user_exists == None:
         add_user(username,email, pswd)
         user_exists = if_user_exists(email)
-        session["user"] = user_exists[0]
+        session["user_id"] = user_exists.user_id
         session["seen"] = []
         session['food_seen'] = []
 
@@ -216,16 +205,10 @@ def user_signs_Up():
 def if_user_exists(email):
     """ Given email address checks if user already exists"""
 
-    # QUERY = """
-    #     SELECT user_id, email
-    #     FROM users
-    #     WHERE email = :email
-    #     """
+   
 
     find_user = User.query.filter_by(email=email).first()
 
-    # db_cursor = db.session.execute(QUERY, {'email': email})
-    # row = db_cursor.fetchone()
 
     return find_user
 
@@ -238,15 +221,22 @@ def add_user(username, email, password):
     now = datetime.now()
     created_date = now.strftime('%Y/%m/%d %H:%M:%S')
 
-    QUERY = """
-        INSERT INTO users (email, password, username, created_date)
-        VALUES (:email, :password, :username, :created_date)
-        """
+    # QUERY = """
+    #     INSERT INTO users (email, password, username, created_date)
+    #     VALUES (:email, :password, :username, :created_date)
+    #     """
 
-    db_cursor = db.session.execute(QUERY, {'email': email, 
-                                'password': password, 'username': username, 'created_date':created_date})
+    # db_cursor = db.session.execute(QUERY, {'email': email, 
+    #                             'password': password, 'username': username, 'created_date':created_date})
 
+
+    new_user = User(username=username, 
+                        email=email,
+                        password=password,
+                        created_date=created_date)
+    db.session.add(new_user)
     db.session.commit()
+
 
 
 
@@ -265,7 +255,7 @@ def user_login():
     if user_exists == None:
         return jsonify(user_exists.serialize())
     elif user_exists.password == pswd:
-        session['user'] = user_exists.user_id
+        session['user_id'] = user_exists.user_id
         session['seen'] = []
         session['food_seen'] = []
         return jsonify(user_exists.serialize())
@@ -283,7 +273,7 @@ def likes_data():
 
 
     results_count = db.session.query(Genre.gname, func.count(MovieList.interested)).join(GenresMovies).join(Movie).\
-                    join(MovieList).filter(MovieList.user_id==session["user"],MovieList.interested==True).group_by(Genre.gname).all()
+                    join(MovieList).filter(MovieList.user_id==session["user_id"],MovieList.interested==True).group_by(Genre.gname).all()
 
 
     print(results_count)
@@ -326,7 +316,7 @@ def likes_data_food():
 
 
     results_count = db.session.query(Food.term, func.count(FoodList.interested)).join(FoodList).\
-                    filter(FoodList.user_id==session["user"],FoodList.interested==True).group_by(Food.term).all()
+                    filter(FoodList.user_id==session["user_id"],FoodList.interested==True).group_by(Food.term).all()
 
 
     user_terms = []
@@ -382,11 +372,11 @@ def if_username_email_exists():
     elif email_exists != None:
         return "This email is already registered"
     else:
-        current_user = User.query.get(session["user"])
+        current_user = User.query.get(session["user_id"])
         current_user.username = username
         current_user.email = email
         db.session.commit()
-
+        flash("User info was updated")
         return "Success"
 
 
@@ -401,7 +391,7 @@ def psw_check():
 
     print(pswd)
 
-    current_user = User.query.get(session["user"])
+    current_user = User.query.get(session["user_id"])
 
     if current_user.password == pswd:
         return "Success"
@@ -424,11 +414,13 @@ def psw_update():
 
     print(pswd)
 
-    current_user = User.query.get(session["user"])
+    current_user = User.query.get(session["user_id"])
 
     current_user.password = pswd
 
     db.session.commit()
+    flash("Your password was successfully updated!")
+
 
     return 'Success'
 
@@ -456,7 +448,7 @@ def show_my_account():
 
 
 
-    current_user = User.query.get(session["user"])
+    current_user = User.query.get(session["user_id"])
 
 
 
@@ -469,13 +461,14 @@ def show_my_account():
 def user_logOut():
     """ log out current user """
     
-    if 'user' not in session:
+    if 'user_id' not in session:
         flash("User is not logged in")
         return redirect("/")
         
     else:
-        session.pop("user")
+        session.pop("user_id")
         session.pop("seen")
+        session.pop("food_seen")
         flash("User is logged out")
         return redirect("/")
 
@@ -487,8 +480,8 @@ def user_logOut():
 def display_wishlist():
     """ Show movies that user liked"""
 
-    wishlist_movies = db.session.query(Movie).join(MovieList).filter(MovieList.user_id == session['user'], MovieList.interested == True).all()
-    wishlist_foods = db.session.query(Food).join(FoodList).filter(FoodList.user_id == session['user'], FoodList.interested == True).all()
+    wishlist_movies = db.session.query(Movie).join(MovieList).filter(MovieList.user_id == session['user_id'], MovieList.interested == True).all()
+    wishlist_foods = db.session.query(Food).join(FoodList).filter(FoodList.user_id == session['user_id'], FoodList.interested == True).all()
 
     # print (wishlist_movies)
 
@@ -548,7 +541,7 @@ def get_movies(what_type,genre=None, decade=None):
             if mov_num not in remember_num:
                 mov = filtered_movielist.offset(mov_num).first()
                 remember_num.append(mov_num)
-                session["seen"].append(mov.movie_id)
+                session["seen_id"].append(mov.movie_id)
 
                 movie_list.append(mov)
                 i +=1
@@ -589,10 +582,8 @@ def display_food():
     what_term = request.args.get("cuisine")
     what_price = request.args.get("price")
 
-
     food_list = get_food(what_type,what_term,what_price)
 
-    # print("food list is ", food_list)
 
     return render_template("your_food.html", foods = food_list, type=what_type, term=what_term,price=what_price)
 
@@ -613,8 +604,7 @@ def get_food(what_type,what_term=None, what_price=None):
         while i < 3 :
             random_off = random.choice(range(1,1001))
             food_choice = ap.search_random(API_KEY, DEFAULT_LOCATION,DEFAULT_TERM, random_off)
-            # print(food_choice)
-            # print('\n'+ food_choice['businesses'][0]['id'])
+            
             if food_choice['businesses'][0]['id'] in session["food_seen"]:
                 continue
             else:
@@ -626,15 +616,11 @@ def get_food(what_type,what_term=None, what_price=None):
 
     else:
         
-        # print("searching by price ", what_price)
         while i < 3 :
-            # random_off = random.choice(range(1,1001))
             food_choice = ap.search(API_KEY, DEFAULT_LOCATION,what_term,what_price)
             print(len(food_choice['businesses']))
             random_off = random.choice(range(1,len(food_choice['businesses'])))
             print(random_off)
-            # print(food_choice['businesses'])
-            # print('\n'+ food_choice['businesses'][random_off]['id'] + '\n')
             
             if food_choice['businesses'][random_off]['id'] in session["food_seen"]:
                 continue
@@ -643,10 +629,7 @@ def get_food(what_type,what_term=None, what_price=None):
                 session["food_seen"].append(food_choice['businesses'][random_off]['id'])
                 i +=1
     
-    print(food_list)
-
-    print("session: ")
-    print(session["food_seen"])
+   
 
     return food_list
 
@@ -660,8 +643,7 @@ def show_more_food():
 
     what_type = request.args.get("type")
     price = request.args.get("price")
-    term = request.args.get("cuisine")
-
+    term = request.args.get("term")
 
 
     food_list = get_food(what_type,term,price)
@@ -703,14 +685,14 @@ def add_to_wishlist():
 
     movie =  request.form.get("movie_id") 
     
-    list_movie = MovieList.query.filter_by(movie_id=movie, user_id=session["user"]).all()
+    list_movie = MovieList.query.filter_by(movie_id=movie, user_id=session["user_id"]).all()
 
 
 
     if list_movie == []:
         now = datetime.now()
         date_added = now.strftime('%Y/%m/%d %H:%M:%S')
-        new_like = MovieList(user_id = session['user'],movie_id = movie, date_added = date_added,
+        new_like = MovieList(user_id = session['user_id'],movie_id = movie, date_added = date_added,
             interested = 1, shared = None)
         db.session.add(new_like)
 
@@ -734,10 +716,12 @@ def add_to_wishlist_food():
     food_id =  request.form.get("food_id") 
     food = ap.get_business(API_KEY,food_id)
     check_food = Food.query.filter_by(yelp_id=food_id).first()
-    main_categories = ["Mediterranean", "Chinese", "French", "Italian","American", "Sushi","Thai","Indian"]
+    main_categories = ["Mediterranean", "Chinese", "French", "Italian","American", "Sushi","Thai","Indian","Mexican"]
+
+    print("id: ", food_id, "\n", "food: ",food, "\n", check_food )
 
     if check_food != None:
-        food_list = FoodList.query.filter_by(food_id=check_food.food_id, user_id=session["user"]).all()
+        food_list = FoodList.query.filter_by(food_id=check_food.food_id, user_id=session["user_id"]).all()
         
     else:
         print(food["categories"])
@@ -748,21 +732,25 @@ def add_to_wishlist_food():
             else:
                 term = "Other" 
         print(term)
-
+        if "price" not in food:
+            price = None
+        else:
+            price = food["price"]
+        print("Price is: ", price)
         new_food = Food(yelp_id=food_id, name=food["name"], 
                         term=term,
-                        price=food["price"],
+                        price=price,
                         address = (food["location"]["display_address"][0]+ ', ' + food["location"]["display_address"][1]), 
                         image_url=food["image_url"])
         db.session.add(new_food)
         db.session.commit()
-        food_list = FoodList.query.filter_by(food_id=new_food.food_id, user_id=session["user"]).all()
+        food_list = FoodList.query.filter_by(food_id=new_food.food_id, user_id=session["user_id"]).all()
         
 
     if food_list == []:
         now = datetime.now()
         date_added = now.strftime('%Y/%m/%d %H:%M:%S')
-        new_food_like = FoodList(user_id = session['user'],food_id = new_food.food_id, date_added = date_added, 
+        new_food_like = FoodList(user_id = session['user_id'],food_id = new_food.food_id, date_added = date_added, 
                             interested = 1, shared = None)
         db.session.add(new_food_like)
 
@@ -789,14 +777,15 @@ def remove_from_wishlist():
     print(content_id, content_type)
 
     if content_type == "mov":
-        update_mov = MovieList.query.filter_by(user_id = session['user'],movie_id = content_id).update(dict(interested = 0))
+        update_mov = MovieList.query.filter_by(user_id = session['user_id'],movie_id = content_id).update(dict(interested = 0))
         db.session.commit()
 
-        print (MovieList.query.filter_by(user_id = session['user'],movie_id = content_id).first())
+        print (MovieList.query.filter_by(user_id = session['user_id'],movie_id = content_id).first())
     elif content_type == "foo":
-        update_foo = FoodList.query.filter_by(user_id = session['user'],food_id = content_id).update(dict(interested = 0))
+        update_foo = FoodList.query.filter_by(user_id = session['user_id'],food_id = content_id).update(dict(interested = 0))
         db.session.commit()
     
+    flash("Item was successfully removed")
     return "Success. "
 
 

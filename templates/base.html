@@ -16,7 +16,7 @@
     <div class="container top">
       <a class="navbar-brand  mr-auto" href="/"><i class="fas fa-film"></i>Whatiwant</a>
         <ul class="navbar-nav navbar-right">
-          {% if session.get('user') != None %}
+          {% if session.get('user_id') != None %}
            <li class="nav-item">
               <a class="nav-link" href="/my_account"><i class="fas fa-user fa-2x"></i></a>
             </li>
@@ -52,7 +52,16 @@
       {% endfor %}
   {% endwith %}
 
+  <div class="alert alert-primary" hidden role="alert">
+    <strong></strong> 
+  </div>
+
+  <div class="alert alert-danger" hidden role="alert">
+   <strong></strong>
+  </div>
+
 </div>
+
 
   {% block content %} put your content here {% endblock %}
 
