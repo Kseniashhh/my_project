@@ -45,15 +45,15 @@ $('#updateForm').on('submit', validateUpdate);
 /////////////////////////////////////////////////////////////////////
 
 
-function ValidatePsws(evt){
-    if ($("#newPassword").val() != $("#confPassword").val()){
-        alert("Passwords don't match");
-        evt.preventDefault();
+// function ValidatePsws(evt){
+//     if ($("#newPassword").val() != $("#confPassword").val()){
+//         alert("Passwords don't match");
+//         evt.preventDefault();
 
-    } else {
-        checkPSW();
-    }
-}
+//     } else {
+//         checkPSW();
+//     }
+// }
 
 
 function checkPSW() {
@@ -76,7 +76,6 @@ function updatePswrd() {
 
     $.post("/psw_update", {psw: $("#newPassword").val()}, function (results) {
         let res = results
-        // alert("Your password was successfully updated!");
 
         location.reload();
         console.log(results);
@@ -93,7 +92,13 @@ function updatePswrd() {
 function updatePSW(evt) {
     evt.preventDefault();
     evt.stopImmediatePropagation();
-    ValidatePsws(evt);
+    if ($("#newPassword").val() != $("#confPassword").val()){
+        alert("Passwords don't match");
+        evt.preventDefault();
+
+    } else {
+        checkPSW();
+    }
     return false;
 
 

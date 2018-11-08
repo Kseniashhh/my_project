@@ -2,7 +2,6 @@
 
 
 function ShowMore(results){
-    console.log(results);
     
     $("#movie-container").html(results.data);
 
@@ -10,14 +9,13 @@ function ShowMore(results){
     
 
 
-$("#more").on("click",function () {
+$("#more").on("click",function (evt) {
     
     let formData = {
         "type": $("#type").val(),
         "genre": $("#genre").val(),
         "decade": $("#decade").val()
     };
-    
     $.get("/more_movies.json",formData, ShowMore);
 
 })

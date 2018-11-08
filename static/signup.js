@@ -10,6 +10,7 @@ $("#signup-Pop").on("click", function(evt){
 
 
 
+
 function userAdded(results){
     let response = results;
     if (response == 'True'){

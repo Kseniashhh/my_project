@@ -60,7 +60,13 @@
   font-weight: 600;
 }
 
-
+.form-control:focus {
+    color: #495057;
+    background-color: transparent;
+    border-color: black;
+    outline: none;
+    box-shadow: none;
+}
 
 .pageone {
   margin-top: 130px;
@@ -115,9 +121,19 @@ a:hover {
     text-decoration: none;
 }
 
-.navbar {
+/*.navbar {
   border-bottom: 1px solid black;
+}*/
+
+.astext {
+    background:none;
+    border:none;
+    margin:0;
+    padding:0;
+    cursor: pointer;
+
 }
+
 
 #back {
   text-align: center;
@@ -140,6 +156,12 @@ a:hover {
   margin: 0 auto;
 }
 
+.labell {
+  font-size: 18px;
+  font-family: 'Amatic SC', cursive;
+  font-weight: bold;
+}
+
 .label {
   font-size: 18px;
   font-family: 'Amatic SC', cursive;
@@ -148,6 +170,11 @@ a:hover {
 .fa-google{
   color: #E9BED8;
 
+}
+
+small {
+  font-family: 'Inconsolata', monospace;
+  font-size: 10px;
 }
 
 .or {
@@ -193,6 +220,7 @@ h2 {
 #more {
   margin-left: 25px;
   border-width: 2px;
+  font-size: 20px;
 }
 
 .fa-heart{
@@ -235,11 +263,9 @@ h2 {
 }
 
 .wishtext {
-  /*font-size: 12px;*/
   font-style: italic;
   height: 170px;
   display: flex;
-  /*display: center;*/
 
   font-family: 'Inconsolata', monospace;
 }

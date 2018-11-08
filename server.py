@@ -262,6 +262,8 @@ def user_login():
     else:
         return jsonify({"ERROR": "Wrong password"})
 
+    print(session)
+
 
 
 ####################################################################
@@ -449,7 +451,7 @@ def show_my_account():
 
 
     current_user = User.query.get(session["user_id"])
-
+    print(session)
 
 
     return render_template("my_account.html", user=current_user)
@@ -561,7 +563,6 @@ def show_more():
     genre = request.args.get("genre")
 
 
-
     movielist = get_movies(what_type,genre, decade)
     serialized_lst = []
     for movie in movielist:
@@ -618,7 +619,7 @@ def get_food(what_type,what_term=None, what_price=None):
         
         while i < 3 :
             food_choice = ap.search(API_KEY, DEFAULT_LOCATION,what_term,what_price)
-            print(len(food_choice['businesses']))
+            print(food_choice)
             random_off = random.choice(range(1,len(food_choice['businesses'])))
             print(random_off)
             

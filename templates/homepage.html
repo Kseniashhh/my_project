@@ -4,10 +4,6 @@
 
 
 
-
-
-<!-- <h1>Welcome to Whatiwant</h1><br> -->
-
 {% if not session.get('user_id') %}
 
 <div class="home-text">
@@ -33,11 +29,11 @@
       <div class="modal-body">
         <form id="loginform" method="POST">
           <div class="form-group">
-            <label for="recipient-name" class="col-form-label label"><i class="fas fa-envelope fa-md"></i> Email:</label>
+            <label for="recipient-name" class="col-form-label labell"><i class="fas fa-envelope fa-md"></i> Email:</label>
             <input type="text" class="form-control label forma"  name="logemail" id="logemail" required>
           </div>
           <div class="form-group">
-            <label for="message-text" class="col-form-label label"><i class="fas fa-unlock-alt fa-md"></i> Password:</label>
+            <label for="message-text" class="col-form-label labell"><i class="fas fa-unlock-alt fa-md"></i> Password:</label>
             <input type="password"  name="logpassword" id="logpassword" class="form-control label forma" required>
           </div>
           <div>
@@ -52,6 +48,7 @@
       </form>
       </div>
       <div class="modal-footer">
+
         <button type="button" class="btn btn-primary btn-outline-dark pops" data-dismiss="modal">Close</button>
       </div>
     </div>
@@ -72,20 +69,20 @@
       <div class="modal-body">
         <form id="signupform" method="POST">
           <div class="form-group">
-            <label for="recipient-name" class="col-form-label label"><i class="fas fa-user fa-md"></i> Username:</label>
+            <label for="recipient-name" class="col-form-label labell"><i class="fas fa-user fa-md"></i> Username:</label>
             <input type="text" class="form-control label forma" name="username" id="username" required>
           </div>
           <div class="form-group">
-            <label for="recipient-name" class="col-form-label label"><i class="fas fa-envelope fa-md"></i> Email:</label>
+            <label for="recipient-name" class="col-form-label labell"><i class="fas fa-envelope fa-md"></i> Email:</label>
             <input type="text" class="form-control label forma"  name="email" id="email" required>
           </div>
           <div class="form-group">
-            <label for="message-text" class="col-form-label label"><i class="fas fa-unlock-alt fa-md"></i> Password:</label>
+            <label for="message-text" class="col-form-label labell"><i class="fas fa-unlock-alt fa-md"></i> Password:</label>
             <input type="password" name="password" id="password" class="form-control label forma" required>
             <input type="checkbox" id="pwcheck" /> <small class="checkbox-label">Show Password </small>
           </div>
           <div class="form-group">
-            <label for="message-text" class="col-form-label label"><i class="fas fa-unlock-alt fa-md"></i> Confirm password:</label>
+            <label for="message-text" class="col-form-label labell"><i class="fas fa-unlock-alt fa-md"></i> Confirm password:</label>
             <input type="password"  name="confirm" id="confirm" class="form-control label forma" required>
             <input type="checkbox" id="confcheck" /> <small class="checkbox-label">Show Password </small>
           </div>
@@ -116,8 +113,7 @@
 {% else %}
 <div class="buttonHolder pageone ">
 <a href="/pick_movie"><button class="btn btn-outline-dark homepage"><span class="btn-text">Pick your movie here <i class="fas fa-film fa-1.5x"></i></span></button></a><br><br>
-<!-- </div> -->
-<!-- <div class="buttonHolder"> -->
+
 <a href="/pick_food"> <button class="btn btn-outline-dark homepage"><span class="btn-text">Pick your food here <i class="fas fa-utensils fa-1.5x"></i></span></button></a></div>
 {% endif %}
 
