@@ -9,8 +9,6 @@ from flask import (Flask, render_template, redirect, request, flash,url_for,
 from model import User, Movie, MovieList, Genre, GenresMovies, FoodList, Food,GoogleUser, connect_to_db, db
 import requests
 from urllib.request import Request, urlopen, URLError
-
-from imdb import IMDb
 import random
 import json 
 import API_funcs as ap
@@ -18,7 +16,6 @@ from datetime import datetime
 from urllib.error import HTTPError
 from urllib.parse import quote
 from urllib.parse import urlencode
-
 from sqlalchemy import func
 
 
@@ -45,9 +42,7 @@ app = Flask(__name__)
 # Required to use Flask sessions and the debug toolbar
 app.secret_key = "ABC"
 
-# Normally, if you use an undefined variable in Jinja2, it fails
-# silently. This is horrible. Fix this so that, instead, it raises an
-# error.
+
 app.jinja_env.undefined = StrictUndefined
 
 
@@ -122,10 +117,7 @@ def google_login(email, google_id):
         session["food_seen"] = []
 
 
-    print(session)
 
-
- 
  
 @app.route('/login')
 def login():
@@ -221,15 +213,6 @@ def add_user(username, email, password):
     now = datetime.now()
     created_date = now.strftime('%Y/%m/%d %H:%M:%S')
 
-    # QUERY = """
-    #     INSERT INTO users (email, password, username, created_date)
-    #     VALUES (:email, :password, :username, :created_date)
-    #     """
-
-    # db_cursor = db.session.execute(QUERY, {'email': email, 
-    #                             'password': password, 'username': username, 'created_date':created_date})
-
-
     new_user = User(username=username, 
                         email=email,
                         password=password,
@@ -262,7 +245,6 @@ def user_login():
     else:
         return jsonify({"ERROR": "Wrong password"})
 
-    print(session)
 
 
 
@@ -278,7 +260,6 @@ def likes_data():
                     join(MovieList).filter(MovieList.user_id==session["user_id"],MovieList.interested==True).group_by(Genre.gname).all()
 
 
-    print(results_count)
     user_genres = []
     genre_count = []
 
@@ -286,8 +267,7 @@ def likes_data():
         user_genres.append(genre)
         genre_count.append(count)
 
-    print(user_genres)
-    print(genre_count)
+    
 
     color_list=["#BC70A4", "#EADEDB","#6B5B95","#DBB1CD","#EC9787","#BE9EC9","#7F4145","#F3D6E4","#DAA990"]
 
@@ -359,9 +339,6 @@ def if_username_email_exists():
     username = request.args.get("username")
     email = request.args.get("email")
 
-    print(username,'+', email)
-
-
 
     username_exists = User.query.filter_by(username=username).first()
 
@@ -391,7 +368,6 @@ def psw_check():
 
     pswd = request.form.get("psw")
 
-    print(pswd)
 
     current_user = User.query.get(session["user_id"])
 
@@ -427,17 +403,6 @@ def psw_update():
     return 'Success'
 
 
-    
-
-    # if user_exists == None:
-    #     return jsonify(user_exists.serialize())
-    # elif user_exists.password == pswd:
-    #     session['user'] = user_exists.user_id
-    #     session['seen'] = []
-    #     session['food_seen'] = []
-    #     return jsonify(user_exists.serialize())
-    # else:
-    #     return jsonify({"ERROR": "Wrong password"})
 
 
 ######################################################################################
@@ -446,8 +411,6 @@ def psw_update():
 @app.route("/my_account")
 def show_my_account():
     """ Rendering my account"""
-
-
 
 
     current_user = User.query.get(session["user_id"])
@@ -485,7 +448,6 @@ def display_wishlist():
     wishlist_movies = db.session.query(Movie).join(MovieList).filter(MovieList.user_id == session['user_id'], MovieList.interested == True).all()
     wishlist_foods = db.session.query(Food).join(FoodList).filter(FoodList.user_id == session['user_id'], FoodList.interested == True).all()
 
-    # print (wishlist_movies)
 
 
     return render_template("wishlist_new.html", liked_movies=wishlist_movies, liked_foods=wishlist_foods)
@@ -688,7 +650,7 @@ def add_to_wishlist():
     
     list_movie = MovieList.query.filter_by(movie_id=movie, user_id=session["user_id"]).all()
 
-
+    print(list_movie)
 
     if list_movie == []:
         now = datetime.now()
