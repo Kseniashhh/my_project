@@ -3,12 +3,12 @@
   <div class="row" id="movie-row">
     {% for movie in movies %}
     <div class="col">
-        <p id="title"> {{ movie.title}} ({{ movie.released_at }})</p>
+        <p class="mtitle" id="title"> {{ movie.title}} ({{ movie.released_at }})</p>
         
         <div class="plotbox">
             <img class = "float-center img-fluid movie" id="mov-img" src="{{movie.poster}}">
             <div class="overlay" >
-                <div class="text" id="mov-plot">{{movie.plot}}</div>
+                <div class="text font" id="mov-plot">{{movie.plot}}</div>
             </div>
         </div>
         <br>

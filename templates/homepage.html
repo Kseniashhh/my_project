@@ -1,13 +1,27 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h1>Welcome to Whatiwant</h1><br>
+
+
+
+
+
+<!-- <h1>Welcome to Whatiwant</h1><br> -->
+
+{% if not session.get('user_id') %}
+
+<div class="home-text">
+  <h1 id="first-line"> Welcome to Whatiwant </h1>
+    <h3 id="second-line"> The App that helps you decide on <i class="fas fa-utensils fa-2x"></i> and <i class="fas fa-film fa-2x"></i></h3>
+    <a id="login-Pop" href="/login"><button class="btn btn-primary btn-outline-dark"><span class="btn-text">LogIn</span></button></a>
+    <a id="signup-Pop" href="/register"><button class="btn btn-primary btn-outline-dark"><span class="btn-text">SignUp</span></button></a>
+</div>
 
 
 <br>
 
 
-<div class="modal fade" id="loginPOP" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="loginPOP"  role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -19,30 +33,26 @@
       <div class="modal-body">
         <form id="loginform" method="POST">
           <div class="form-group">
-            <label for="recipient-name" class="col-form-label label">Email:</label>
-            <input type="text" class="form-control label" placeholder="Enter your email" name="logemail" id="logemail" required>
+            <label for="recipient-name" class="col-form-label label"><i class="fas fa-envelope fa-md"></i> Email:</label>
+            <input type="text" class="form-control label forma"  name="logemail" id="logemail" required>
           </div>
           <div class="form-group">
-            <label for="message-text" class="col-form-label label">Password:</label>
-            <input type="password" placeholder="Enter your password" name="logpassword" id="logpassword" class="form-control label" required>
+            <label for="message-text" class="col-form-label label"><i class="fas fa-unlock-alt fa-md"></i> Password:</label>
+            <input type="password"  name="logpassword" id="logpassword" class="form-control label forma" required>
           </div>
           <div>
-          <div class="buttonHolder">
-          <input type="submit" class="btn btn-primary btn-outline-dark" value="Log In">
-        </div>
+          <input type="submit" class="btn btn-primary btn-outline-dark pops" value="Log In">
         </div>
         <small class="or">OR </small>
       </form>
       <form action="/oauth_check">
          <div>
-          <div class="buttonHolder">
-          <button type="submit" class="btn btn-primary btn-outline-dark">Log in with Google  <i class="fab fa-google"></i></button>
-        </div>
+          <button type="submit" class="btn btn-primary btn-outline-dark pops">SignIn with Google  <i class="fab fa-google"></i></button>
         </div>
       </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary btn-outline-dark pops" data-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
@@ -50,7 +60,7 @@
 
 
 
-<div class="modal fade" id="signupPOP" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="signupPOP"  role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -62,36 +72,36 @@
       <div class="modal-body">
         <form id="signupform" method="POST">
           <div class="form-group">
-            <label for="recipient-name" class="col-form-label label">Username:</label>
-            <input type="text" class="form-control label" placeholder="Enter your username" name="username" id="username" required>
+            <label for="recipient-name" class="col-form-label label"><i class="fas fa-user fa-md"></i> Username:</label>
+            <input type="text" class="form-control label forma" name="username" id="username" required>
           </div>
           <div class="form-group">
-            <label for="recipient-name" class="col-form-label label">Email:</label>
-            <input type="text" class="form-control label" placeholder="Enter your email" name="email" id="email" required>
+            <label for="recipient-name" class="col-form-label label"><i class="fas fa-envelope fa-md"></i> Email:</label>
+            <input type="text" class="form-control label forma"  name="email" id="email" required>
           </div>
           <div class="form-group">
-            <label for="message-text" class="col-form-label label">Password:</label>
-            <input type="password" placeholder="Enter your password" name="password" id="password" class="form-control label" required>
+            <label for="message-text" class="col-form-label label"><i class="fas fa-unlock-alt fa-md"></i> Password:</label>
+            <input type="password" name="password" id="password" class="form-control label forma" required>
             <input type="checkbox" id="pwcheck" /> <small class="checkbox-label">Show Password </small>
           </div>
           <div class="form-group">
-            <label for="message-text" class="col-form-label label">Confirm password:</label>
-            <input type="password" placeholder="Confirm your password" name="confirm" id="confirm" class="form-control label" required>
+            <label for="message-text" class="col-form-label label"><i class="fas fa-unlock-alt fa-md"></i> Confirm password:</label>
+            <input type="password"  name="confirm" id="confirm" class="form-control label forma" required>
             <input type="checkbox" id="confcheck" /> <small class="checkbox-label">Show Password </small>
           </div>
           <div>
-          <input type="submit" class="btn btn-primary btn-outline-dark" value="Sign Up">
+          <input type="submit" class="btn btn-primary btn-outline-dark pops" value="Sign Up">
         </div>
        <small class="or"> OR </small>
       </form>
       <form action="/oauth_check">
          <div>
-          <button type="submit" class="btn btn-primary btn-outline-dark">Sign up with Google <i class="fab fa-google"></i></button>
+          <button type="submit" class="btn btn-primary btn-outline-dark pops">SignIn with Google <i class="fab fa-google"></i></button>
         </div>
       </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary btn-outline-dark pops" data-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
@@ -102,11 +112,13 @@
 
 
 
-{% if session.get('user_id') != None %}
-<div class="buttonHolder">
-<a href="/pick_movie"><button class="btn btn-outline-dark homepage"> Pick your movie here </button></a><br><br></div>
-<div class="buttonHolder">
-<a href="/pick_food"> <button class="btn btn-outline-dark homepage">Pick your food here </button></a></div>
+{#{% if session.get('user_id') != None %}#}
+{% else %}
+<div class="buttonHolder pageone ">
+<a href="/pick_movie"><button class="btn btn-outline-dark homepage"><span class="btn-text">Pick your movie here <i class="fas fa-film fa-1.5x"></i></span></button></a><br><br>
+<!-- </div> -->
+<!-- <div class="buttonHolder"> -->
+<a href="/pick_food"> <button class="btn btn-outline-dark homepage"><span class="btn-text">Pick your food here <i class="fas fa-utensils fa-1.5x"></i></span></button></a></div>
 {% endif %}
 
 {% endblock %}

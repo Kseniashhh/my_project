@@ -6,7 +6,7 @@
 
 <form action = "/foods" class= "pick" id="random">
     <div class="buttonHolder">
-    <input type="submit" class="btn btn-outline-dark" value="Surprise me!"> <br>
+    <input type="submit" class="btn btn-outline-dark btn-text" value="Surprise me!"> <br>
     <input type="text" name="type" value= "random" hidden>
 </div>
 </form>
@@ -15,7 +15,7 @@
 <form action = "/foods" class= "pick" id="search">
     <input type="text" name="type" value= "search" hidden>
 
-    Select cuisine: <select name="cuisine" class = "form-control selcls">
+    <label class="btn-text">Select cuisine: </label><select name="cuisine" class = "form-control selcls" >
         <option selected disabled>Choose cuisine</option>
         <option value="Mediterranean">Mediterranean</option>
         <option value="Chinese">Chinese</option>
@@ -26,7 +26,7 @@
         <option value="Indian">Indian</option>
         <option value="Mexican">Mexican</option>
         <option value="Sushi">Sushi</option></select><br><br>
-    Select price group: <select name="price" class = "form-control selcls">
+    <label class="btn-text">Select price group:</label> <select name="price" class = "form-control selcls">
         <option selected disabled>Choose price group</option>
         <option value="3,4">$$$ - $$$$</option>
         <option value="2,3">$$ - $$$</option>
@@ -34,7 +34,7 @@
         <!-- <option value="1">$</option> -->
     </select><br><br>
     <div class="buttonHolder">
-    <input type="submit" class="btn btn-outline-dark" value="Give me the best options"> <br></div>
+    <input type="submit" class="btn btn-outline-dark btn-text" value="Give me the best options"> <br></div>
     
 </form>
 

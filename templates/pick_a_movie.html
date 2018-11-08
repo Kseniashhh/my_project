@@ -6,7 +6,7 @@
 
 <form action = "/movies" class= "pick" id="random">
     <div class="buttonHolder">
-    <input type="submit" class="btn btn-outline-dark" value="Surprise me!"> <br>
+    <input type="submit" class="btn btn-outline-dark btn-text" value="Surprise me!"> <br>
     <input type="text" name="type" value= "random" hidden>
     </div>
 
@@ -16,14 +16,14 @@
 <form action = "/movies" class= "pick" id="search">
     <input type="text" class= "pickf" name="type" value= "search" hidden>
 
-    Select your genre: <select name="genre" class = "form-control selcls custom-select">
+    <label class="btn-text">Select your genre: </label><select name="genre" class = "form-control selcls custom-select">
         <option selected disabled>Choose genre</option>
         <option value="Drama">Drama</option>
         <option value="Comedy">Comedy</option>
         <option value="Action">Action</option>
         <option value="Thriller">Thriller</option>
         <option value="Documentary">Documentary</option></select><br><br>
-    Select your decade: <select name="decade" class = "form-control selcls">
+    <label class="btn-text">Select your decade:</label> <select name="decade" class = "form-control selcls">
         <option selected disabled>Choose decade</option>
         <option value="1980s">1980s</option>
         <option value="1990s">1990s</option>
@@ -32,7 +32,7 @@
     </select><br><br>
     <div class="buttonHolder">
 
-    <input type="submit" class="btn btn-outline-dark" value="Give me the best options"> <br></div>
+    <input type="submit" class="btn btn-outline-dark btn-text" value="Give me the best options"> <br></div>
     
 </form>
 

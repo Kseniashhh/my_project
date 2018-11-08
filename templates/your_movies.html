@@ -1,13 +1,14 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<span>
+<div class="topdiv">
+    <form class="topform">
     <a href="/pick_movie" id="back">Go back to select</a>
-    <h1>Your movies       
-    <button class="btn btn-outline-dark" id="more">Show more</button></h1>
+    <b class="h1">Your movies       
+    <button class="btn btn-outline-dark" id="more">Show more</button></b></form>
     <input type="text" value={{type}} id="type" hidden>
     <input type="text" value={{decade}} id="decade" hidden>
-    <input type="text" value={{genre}} id="genre" hidden></span>
+    <input type="text" value={{genre}} id="genre" hidden></div>
 
 
 
@@ -17,12 +18,12 @@
   <div class="row" id="movie-row">
     {% for movie in movies %}
     <div class="col">
-        <p id="title"> {{ movie.title}} ({{ movie.released_at }})</p>
+        <p class="mtitle" id="title"> {{ movie.title}} ({{ movie.released_at }})</p>
         
         <div class="plotbox">
             <img class = "float-center img-fluid movie" id="mov-img" src="{{movie.poster}}">
             <div class="overlay" >
-                <div class="text" id="mov-plot">{{movie.plot}}</div>
+                <div class="text font" id="mov-plot">{{movie.plot}}</div>
             </div>
         </div>
         <br>

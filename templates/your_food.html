@@ -2,14 +2,15 @@
 {% block content %}
 
 
-<span>
-<a href="/pick_food" id="back">Go back to select</a>
-<h1>Your foods
+<div class="topdiv">
+    <form class="topform">
+        <a href="/pick_food" id="back">Go back to select</a>
+            <b class="h1">Your foods
 
-    <button class="btn btn-outline-dark" id="more">Show more</button></h1>
+    <button class="btn btn-outline-dark btn-text" id="more">Show more</button></b></form>
     <input type="text" value={{type}} id="type" hidden>
     <input type="text" value={{term}} id="cuisine" hidden>
-    <input type="text" value={{price}} id="hidden-price" hidden></span>
+    <input type="text" value={{price}} id="hidden-price" hidden></div>
 
 
 <br>
@@ -20,37 +21,36 @@
     <div class="col">
         <div class="col-sm">
             <p class="ptitle"><b id="title"> {{ food['name']}} </b><br>
-            ({{food['categories'][0]['title']}})</p>
+            <i class="font">({{food['categories'][0]['title']}})</i></p>
 
-            <b id="price">Price:</b> {{ food.get('price', 'Mystery price')}}
+            <b class="font" id="price">Price:</b>  {{ food.get('price', 'Mystery price')}}
             <div id="ratings" class="ratings">
                 {% if 'rating' not in food %}
-                Unfortunately no ratings yet
+                <b class="font">Unfortunately no ratings yet</b>
                 {% elif food['rating'] == 1.0 %}
-                <b>Rating:</b> <i class="fas fa-star"></i>
+                <b class="font">Rating:</b> <i class="fas fa-star"></i>
                 {% elif food['rating'] == 1.5%}
-                <b>Rating:</b> <i class="fas fa-star"></i><i class="fas fa-star-half"></i>
+                <b class="font">Rating:</b> <i class="fas fa-star"></i><i class="fas fa-star-half"></i>
                 {% elif food['rating'] == 2.0%}
-                <b>Rating:</b> <i class="fas fa-star"></i><i class="fas fa-star"></i>
+                <b class="font">Rating:</b> <i class="fas fa-star"></i><i class="fas fa-star"></i>
                 {% elif food['rating'] == 2.5%}
-                <b>Rating:</b> <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half"></i>
+                <b class="font">Rating:</b> <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half"></i>
                 {% elif food['rating'] == 3.0%}
-                <b>Rating:</b> <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                <b class="font">Rating:</b> <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
                 {% elif food['rating'] == 3.5%}
-                <b>Rating:</b> <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half"></i>
+                <b class="font">Rating:</b> <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half"></i>
                 {% elif food['rating'] == 4.0%}
-                <b>Rating:</b> <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                <b class="font">Rating:</b> <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
                 {% elif food['rating'] == 4.5%}
-                <b>Rating:</b> <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half"></i>
+                <b class="font">Rating:</b> <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half"></i>
                 {% elif food['rating'] == 5.0%}
-                <b>Rating:</b> <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                <b class="font">Rating:</b> <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
                 {% endif %}
-                <p>This place has <b>{{ food['review_count']}}</b> reviews on Yelp <i class="fab fa-yelp"></i></p>
+                <p> <b class="font">This place has {{ food['review_count']}} reviews on Yelp</b> <i class="fab fa-yelp"></i></p>
             </div>
             <img class = "img-fluid" id="food-img"  src="{{food['image_url']}}"><br>
-            <div id="food-location"><i class="fas fa-map-marker-alt" id="loc"> </i>
+            <div id="food-location" ><i class="fas fa-map-marker-alt" id="loc"> </i>
                 <address id="location">{{food['location']['display_address'][0] + " " + food['location']['display_address'][1]}}</address></div>
-            <br>
             <button class="btn heart"><i class="far fa-heart fa-2x" id="heart{{food['id']}}" data-foodID="{{food['id']}}"></i></button>
             <a href="mailto:friend@example.com?Subject=Check%20this%20out&body=How%20about%20this%20place%20for%20our%20next%20nighout%20-%20{{ food['name']}}?%20Here's%20link%20on%20yelp%20-%20{{ food['url']}}" target="_top">
                 <button class="btn"><i class="fas fa-share fa-2x" id="share{{food['id']}}" data-foodID="{{food['id']}}"></i></button>

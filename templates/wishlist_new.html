@@ -6,10 +6,10 @@
 <div class="container"> 
     <ul class="nav nav-tabs" id="myTab" role="tablist">
       <li class="nav-item">
-        <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Movies</a>
+        <a class="nav-link active btn-text" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Movies</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Foods</a>
+        <a class="nav-link btn-text " id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Foods</a>
       </li> 
     </ul>
     <div class="tab-content" id="myTabContent">
@@ -30,14 +30,13 @@
                     </div>
                     <div class="col-2 text-center">
                         <button class="btn remove" id="mremove" data-movID="mov{{movie.movie_id}}"><i class="fas fa-trash-alt trash fa-3x"></i></button>
-                        <!-- <input type="text" name="type" value= "movie" hidden> -->
 
                     </div> 
                   </div>     
                 </div>
                 {% endfor %}
         {% else %}
-            <p>Your movies wishlist is empty</p>
+            <p class="font">Your movies wishlist is empty</p>
                 {% endif %}
         
       </div>
@@ -53,8 +52,12 @@
                         <img class = "img-fluid wishfood" src="{{food.image_url}}">
                     </div>
                     <div class="col-7 text-center wishtext">
-                        <div class="ftext">
-                            <address id="location"> {{ food.address}}</address><br>
+                        <div class="wtext" id="bigger">
+                            <address id="location"> 
+                            {{ food.address}}
+                          </address>
+
+                            <i class="fas fa-map-marker-alt" id="loc"> </i>
                             <b id="price">{{ food.price }}</b> <br>
                             {{ food.term }}
                         </div>
@@ -69,7 +72,7 @@
                   </div>
             {% endfor %}
         {% else %}
-            <p>Your food wishlist is empty</p>
+            <p class="font">Your food wishlist is empty</p>
             {% endif %} 
       </div>
     </div>
