@@ -56,7 +56,8 @@ google = oauth.remote_app('google',
                           access_token_method='POST',
                           access_token_params={'grant_type': 'authorization_code'},
                           consumer_key=GOOGLE_CLIENT_ID,
-                          consumer_secret=GOOGLE_CLIENT_SECRET)
+                          consumer_secret=GOOGLE_CLIENT_SECRET,
+                          redirect_url = "http://whatiwantproject.com" + REDIRECT_URI)
 
 
 
