@@ -1,5 +1,5 @@
 [Unit]
-Description=My Awesome Cat App
+Description=Whatiwant app
 After=network.target
 
 [Service]

@@ -774,5 +774,5 @@ if __name__ == "__main__":
 
     # Use the DebugToolbar
     DebugToolbarExtension(app)
-    app.run(host='35.161.232.242')
-    # app.run(port=5000, host='0.0.0.0')
+    # app.run(host)
+    app.run(port=5000, host='0.0.0.0')
